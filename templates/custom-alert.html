@@ -1,0 +1,22 @@
+
+<div id="customAlertModal" class="modal fade bs-alert-modal-sm alert-modal {{alertInfo.alertStyleClass}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header"><h3 ng-bind="alertInfo.alertHeading"></h3></div>      
+        <div class="modal-body text-center">
+            <p ng-bind="alertInfo.alertMessage"></p>
+                
+            <div>
+                <button type="button" class="btn btn-primary" ng-click="alertInfo.fireAlertAction(alertInfo.alertActionType)" ng-bind="alertInfo.alertActionText">
+                </button>
+            </div>      
+
+            <div  ng-if="alertActionType == 'confirm' ">
+                <button type="button" class="btn btn-primary" ng-click="alertInfo.fireAlertAction(alertInfo.alertActionType)" ng-bind="alertInfo.alertActionText"></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+  </div>
+</div>

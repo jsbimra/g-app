@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="xCCeedGlobalApp">
+<head>
+	<title>xCCeed-Global</title>
+
+	<!-- metata tag for the corome compability -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
+
+    <!-- custom css -->
+    <link href="system/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="system/css/filter.css" rel="stylesheet" />
+    <link href="system/css/font-awesome.css" rel="stylesheet" />
+    <link href="system/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="system/css/font-face.css" rel="stylesheet" />
+	<link href="system/css/pushy.css" rel="stylesheet" />
+    <link href="system/css/custom.css" rel="stylesheet" />
+</head>
+<body>
+	<div ng-controller="parentController as parentCtrl" class="viewParentContainer">
+		
+		<!-- spinner (loader added) -->
+		<div name="loader" id="loadSpinner" ng-include="'templates/LoaderTemplate.html'"></div>
+
+		<!-- throw the alert on the basis of error -->
+		<custom-alert alert-info="alertInfo" ng-include="'templates/custom-alert.html'"></custom-alert>
+
+		<!-- Site Overlay for Pushy Plugin -->
+		<div class="site-overlay"></div>
+
+		<nav class="pushy pushy-right">			
+		    <ul>
+		      <li><a href="#/myDetails"><i class="fa fa-user"></i> My Profile</a></li>
+		      <li><a href="#/contactAdmin"><i class="fa fa-envelope"></i> Contact Administrator </a></li>
+		      <li><a href="#/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+		    </ul>
+	 	</nav>
+
+		
+		<ng-view class="view-animate"></ng-view>
+
+		
+	</div><!-- main div end -->
+
+	<!-- script loading sections -->
+	<!-- Angular releated scripts -->
+	<script src="system/js/angular.min.js"></script>
+	<script src="system/js/angular-route.js"></script>
+	<script src="system/js/angular-animate.min.js"></script>
+	<script src="system/js/mobile-angular-ui.min.js"></script>
+	<!--<script src="system/js/jquery-1.10.2.js"></script>-->
+	<script src="system/js/jquery.min.js"></script>
+	<script src="system/js/jquery-ui.min.js"></script> 
+	<script src="system/js/bootstrap.min.js"></script>
+	<script src="system/js/messages.js"></script>
+	<script src="system/js/custom.js"></script>
+	<script src="system/js/pushy.min.js"></script>
+
+
+	<!-- encryption releated JS file loaded -->
+	<script src="system/js/Crypto.js"></script>
+
+	<!-- app releated scripts -->
+	<script src="app/app.js"></script>
+	<script src="app/route-config.js"></script>
+	<script src="app/masterDataService.js"></script>
+	<script src="app/constantServices.js"></script>
+	<script src="app/common.services.js"></script>
+	<script src="app/parent/parent.controller.js"></script>
+	<script src="app/parent/parentServices.js"></script>
+	<script src="system/js/ionic-ion-autoListDivider.js"></script>
+
+
+	<!-- login JS file initiated -->
+	<script src="login/loginController.js"></script>
+	<script src="login/loginServices.js"></script>
+
+	<!-- people JS file initiated -->
+	<script src="people/sharedServices.js"></script>
+	<script src="people/peopleController.js"></script>
+	<script src="people/peopleServices.js"></script>
+
+	<!-- peopleDetail JS file initaited -->
+	<script src="people/peopleDetail/peopleDetailController.js"></script>
+	<script src="people/peopleDetail/myDetailsController.js"></script>
+
+	<!-- filter JS file initaited -->
+	<script src="filters/filterController.js"></script>
+
+	<!-- contact Js file initiated -->
+	<script src="contact/contactController.js"></script>
+	<script src="contact/contactServices.js"></script>
+</body>
+</html>

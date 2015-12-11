@@ -1,0 +1,115 @@
+<div class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+        <div class="login-box">
+          <div class="login">
+            <h1><img src="system/img/logo.png" width="120" height="120" alt="Exceed App"/></h1>
+          </div>
+          <!-- Login Form Start Here -->
+          <form class="form-signin" name="frmLogin" ng-submit="Login($event)" novalidate ng-class="{loginSubmitted:loginctrl.submitted}">
+           <input type="hidden" name="hidEncrypted" id="hidEncrypted" value="" />
+            <input type="hidden" name="hidKey" id="hidKey" value="Hd48voYp27Wd40Pi" />
+            <input type="hidden" name="hidIv" id="hidIv" value="b7s8d2e9c3621ae0" />
+            <input type="hidden" name="hidSecret" id="hidSecret" value="CC-India xCCeed" />
+            <div class="form-group">
+              <div class="inner-addon left-addon"> <i class="fa fa-user"></i>
+                <input type="text"class="form-control" placeholder="Username" id="userID" name="loginctrl.name" ng-model="loginctrl.userID" ng-minlength="3" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="inner-addon left-addon"> <i class="fa fa-lock"></i>
+                <input type="password" class="form-control" placeholder="Password" id="userPassword" ng-model="loginctrl.userPassword" required />
+              </div>
+            </div>
+           <button class="btn btn-block btn-warning" type="submit">Login</button>
+          </form>
+          <!-- // Login Form End Here -->
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 cc-logo"> <img src="system/img/cc-logo.png" width="242" height="25" alt=""/> </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="login-page">
+  <div class="row"> 
+    <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+      <div class="login-box">
+        <div class="login">
+          <h1><img src="system/img/logo.png" width="120" height="120" alt="Exceed App"/></h1>
+        </div>
+        <form class="form-signin" name="loginForm" novalidate>
+          <input type="hidden" name="hidEncrypted" id="hidEncrypted" value="" />
+          <input type="hidden" name="hidKey" id="hidKey" value="Hd48voYp27Wd40Pi" />
+          <input type="hidden" name="hidIv" id="hidIv" value="b7s8d2e9c3621ae0" />
+          <input type="hidden" name="hidSecret" id="hidSecret" value="CC-India xCCeed" />
+          <div class="form-group">
+            <div class="inner-addon left-addon"> <i class="fa fa-user"></i>
+              <input type="text" class="form-control" placeholder="Username" id="userID" name="login.name" ng-model="login.userID" ng-minlength="3" required/>
+              <div ng-messages="loginForm.name.$error">
+                <p ng-message="minlength">Your name is too short.</p>
+                <p ng-message="required">Your name is required.</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="inner-addon left-addon"> <i class="fa fa-lock"></i>
+              <input type="password" class="form-control" placeholder="Password" id="userPassword" ng-model="login.userPassword" required />
+            </div>
+          </div>
+          <button class="btn btn-block btn-warning" ng-click="Login()">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- footer releated code added -->
+  <!-- <div class="row"> -->
+    <!-- <div class="col-md-12 cc-logo"> <img src="system/img/cc-logo.png" width="242" height="25" alt=""/> </div> -->
+  <!-- </div> -->
+<!-- </div> --> 

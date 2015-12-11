@@ -1,0 +1,37 @@
+.site-main.row {
+        margin: 0
+    }
+    
+    .inner {
+        min-height: 100%;
+    }
+    /* needed to override jQuery */
+    
+    @media (max-width:767px) {
+        .primary-col,
+        .secondary-col {
+            height: 100%;
+        }
+        .site-main {
+            padding-bottom: 0px;
+        }
+    }
+    /* larger viewport layout */
+    
+    @media (min-width:768px) {
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+        #page {
+            height: 100%;
+            height: auto;
+            min-height: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .site-main {
+            height: 100%;
+        }
+    }

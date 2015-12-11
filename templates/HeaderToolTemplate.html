@@ -1,0 +1,40 @@
+<header class="navbar-default navbar-fixed-top">
+	<!-- this is used to set the back button in the system -->
+	<div class="back-arrow" ng-if="peopleDetailCtrl.peopleDetailHeader" >
+	 	<a href="#/people"><i class="fa fa-angle-left"></i></a>
+    </div>
+    
+    <!-- Arrow for filter -->
+	<div class="back-arrow" ng-if="filterCtrl.filterHeader" >
+	 	<a href="#/people"><i class="fa fa-angle-left"></i></a>
+    </div>
+
+ 	<!-- Arrow for filter -->
+	<div class="back-arrow" ng-if="contactCtrl.contactHeader" >
+	 	<a href="#/people"><i class="fa fa-angle-left"></i></a>
+    </div>
+    
+    <!-- this is to set the heading in the to the system -->
+	<div class="pull-left title-heading" >
+		<!-- people controller -->
+		<h1 ng-if="peopleCtrl.peopleHeader" ng-bind="parentCtrl.peopleHeading"></h1>
+		<!-- people detail -->
+		<div  ng-if="peopleDetailCtrl.peopleDetailHeader">
+			<h1 ng-bind="parentCtrl.peopleDetailHeading"></h1>
+		</div>
+		<!-- Filter -->
+		<div ng-if="filterCtrl.filterHeader" >
+			<h1 ng-bind="parentCtrl.filterHeading"></h1>
+		</div>
+		<div ng-if="contactCtrl.contactHeader" >
+			<h1 ng-bind="parentCtrl.contactHeading"></h1>
+		</div>
+	</div>
+
+	<!-- this is used to set the right side icon button  -->
+	<div class="handburger" ng-if="peopleCtrl.peopleHeader">
+		<div class="menu-btn"><i class="fa fa-bars fa-1x"></i></div>
+		<div class="search-btn" id="searchBtn"><a><i class="fa fa-search"></i></a></div>
+	</div>
+</header>
+

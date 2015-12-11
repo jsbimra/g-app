@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="xCCeedGlobalApp">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- The above 2 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<!-- Note there is no responsive meta tag here -->
+	<title>Consultant Registration</title>
+	<!-- Font Awesome CSS -->
+	<link href="../system/css/font-awesome.css" rel="stylesheet">
+	<!-- Bootstrap core CSS -->
+	<link href="../system/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+	<!-- Custom styles for this template -->
+	<link href="../system/css/non-responsive.css" rel="stylesheet">
+	<!-- Customized CSS -->
+	<link href="register.css" rel="stylesheet">
+	<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+	<!--[if lt IE 9]><script src="js/ie8-responsive-file-warning.js"></script><![endif]-->
+	<script src="../system/js/ie-emulation-modes-warning.js"></script>
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<script src="../system/js/angular.min.js"></script>
+	<script src="../system/js/angular-messages.min.js"></script>
+</head>
+
+<body ng-controller="registerController as regCtrl">
+
+	<div class="loadingWrap loginLoader globalSpinner" ng-show="regCtrl.loadingFlag">
+		 <p><span>Please wait...</span></p>
+		<div class="spinner"></div>
+	</div>
+
+	<!-- Header Container -->
+	<header class="header">
+		<div class="container">
+			<div class="row text-center"> <span class="pull-left">Welcome, Brent Williams</span>
+				<button class="pull-right btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+			</div>
+		</div>
+	</header>
+	<!-- Admin Banner Container -->
+	<main class="ad-banner">
+		<div class="container">
+			<div class="navbar-brand pull-left"> <img src="../system/images/logo.png" width="88" height="88" alt="" /> </div>
+		</div>
+	</main>
+	<!-- Body Container -->
+	<!-- Common Error Message template Angular way!  -->
+	<script type="text/ng-template" id="error-messages">
+	  <div ng-message="required">This field is required</div>
+	</script>
+	<form name="registerEmpForm" id="registerEmpForm" ng-submit="regCtrl.submitRegisterEmpForm($event)" novalidate ng-class="{submitted:submitted}">
+		<div class="container">
+			<section class="heading">
+				<div class="row">
+					<h1 class="pull-left" ng-bind="regCtrl.title"></h1>
+				</div>
+			</section>
+			<!-- Section Form Group Start -->
+			<section class="well">
+				<div class="row">
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">User ID </label>
+						<input type="text" class="form-control" placeholder="Enter Employee ID" 
+							ng-model="regCtrl.userid" name="userid" />
+					</div>
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Name </label>
+						<input type="text" class="form-control" placeholder="Enter Employee ID" 
+							ng-model="regCtrl.username" name="username" />
+					</div>
+					<!-- Single Form Group -->
+					<div class="row">
+						<div class="col-md-6 form-group">
+							<label class="label-heading">Current Role <span class="text-danger">*</span> </label>
+							<select class="form-control" ng-model="regCtrl.currentRole" name="currentRole" required>
+								<option value="">Select Your Role</option>
+								<option value="{{opt.Designation}}"  ng-repeat="opt in regCtrl.designationArray" ng-bind="opt.Designation"></option>
+							</select>
+							<div class="error ng-hide" ng-messages="registerEmpForm.currentRole.$error" ng-show="(registerEmpForm.currentRole.$dirty || submitted)" ng-messages-include="error-messages">
+							</div>
+						</div>
+
+						<div class="col-md-6 form-group">
+							<label class="label-heading">In Capgemini Consulting since <span class="text-danger">*</span> </label>
+							<input type="text" class="form-control" placeholder="Year" name="sinceYear" ng-model="regCtrl.sinceYear" required ng-pattern="/^\d+$/" maxlength="4" ng-minlength="4" ng-change="regCtrl.checkValidYear(regCtrl.sinceYear)" />
+							
+							<div class="error ng-hide" ng-messages="registerEmpForm.sinceYear.$error" ng-show="(registerEmpForm.sinceYear.$dirty || submitted)" ng-messages-include="error-messages">
+								<div ng-message="pattern">Only numeric allowed.</div>
+								<div ng-message="minlength">Minimum 4 digits.</div>
+							</div>
+
+							<div class="error ng-hide" ng-show="regCtrl.showErrorYearMsg">Year should be in range of 1950 - {{regCtrl.curYear}}</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 form-group">
+							<label class="label-heading">Country <span class="text-danger">*</span> </label>
+							<select class="form-control" name="country" ng-model="regCtrl.country" required>
+								<option value="" selected>Select Country</option>
+								<option data-code="{{opt.Country_Code}}" value="{{opt.Country_Name}}" ng-repeat="opt in regCtrl.countriesArray">{{opt.Country_Name}}</option>
+							</select>
+							<div class="error ng-hide" ng-messages="registerEmpForm.country.$error" ng-show="(registerEmpForm.country.$dirty || submitted)" ng-messages-include="error-messages">
+							</div>
+						</div>
+
+						<div class="col-md-6 form-group">
+							<label class="label-heading">City</label>
+							<input type="text" class="form-control" placeholder="Enter City" name="city" ng-model="regCtrl.city" />
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- Section Form Group End -->
+			<!-- Element Heading Start -->
+			<div class="media-heading">
+				<h3>Contact Details</h3>
+			</div>
+			<!-- Element Heading End -->
+			<!-- Section Form Group Start -->
+			<section class="well">
+				<div class="row">
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Mobile <span class="text-danger">*</span></label>
+						<!-- <div class="pull-left">+</div> -->
+						<div class="pull-left code-col">
+							<input type="text" class="form-control" title="Enter country code" placeholder="CC" name="mobileCCode" ng-model="regCtrl.mobileCCode" ng-pattern="/^\d+$/" maxlength="2" required />
+						</div>
+						<div class="pull-left rest-col">
+							<input type="text" class="form-control" placeholder="Enter Mobile Number" name="mobileNumber" ng-model="regCtrl.mobileNumber" ng-pattern="/^\d+$/" ng-minlength="5" maxlength="15" required />
+						</div>
+
+						<div class="error ng-hide" ng-messages="registerEmpForm.mobileCCode.$error" ng-show="(registerEmpForm.mobileCCode.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="pattern">Only numeric allowed.</div>
+						</div>
+						<div class="error ng-hide" ng-messages="registerEmpForm.mobileNumber.$error" ng-show="(registerEmpForm.mobileNumber.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="pattern">Only numeric allowed.</div>
+							<div ng-message="minlength">Minimum 5 digits.</div>
+						</div>
+					</div>
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Email ID <span class="text-danger">*</span></label>
+						<input type="email" value="brent.williams@capgemini.com" class="form-control" placeholder="Enter Email Address" 
+							name="emailId" ng-model="regCtrl.emailId" required>
+				       	<div class="error ng-hide" ng-messages="registerEmpForm.emailId.$error" ng-show="(registerEmpForm.emailId.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="email">Your email address is invalid</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Work Phone </label>
+						<!-- <div class="pull-left">+</div> -->
+						<div class="pull-left code-col">
+							<input type="text" class="form-control" title="Enter country code" placeholder="CC" name="workCCode" ng-model="regCtrl.workCCode" ng-pattern="/^\d+$/" maxlength="2" />
+						</div>
+						<div class="pull-left rest-col">
+							<input type="text" class="form-control" placeholder="Enter Work Phone" name="workPhone" ng-model="regCtrl.workPhone" ng-pattern="/^\d+$/" ng-minlength="5" maxlength="15" />
+						</div>
+
+						<div class="error ng-hide" ng-messages="registerEmpForm.workCCode.$error" ng-show="(registerEmpForm.workCCode.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="pattern">Only numeric allowed.</div>
+						</div>
+						<div class="error ng-hide" ng-messages="registerEmpForm.workPhone.$error" ng-show="(registerEmpForm.workPhone.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="pattern">Only numeric allowed.</div>
+							<div ng-message="minlength">Minimum 5 digits.</div>
+						</div>
+					</div>
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading"> Extension </label>
+						<input type="text" value="" class="form-control" placeholder="Enter Extension" name="extenstion" ng-model="regCtrl.extenstion" />
+					</div>
+					<!-- Section Form Group End -->
+				</div>
+			</section>
+			<!-- Section Form Group End -->
+			<!-- Element Heading Start -->
+			<div class="media-heading">
+				<h3>Skills</h3>
+			</div>
+			<!-- Element Heading End -->
+			<!-- Section Form Group Start -->
+			<section class="well">
+				<div class="row">
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Sectors <span class="text-danger">*</span> </label>
+						<span class="footer-label">Maximum 3 selections</span>
+						<select multiple require-multiple class="form-control" name="sectorsList" ng-model="regCtrl.sectorsList" ng-maxlength="3" ng-required="regCtrl.sectorsList.length == 0">
+							<!-- <option value="" selected>Choose any three options</option> -->
+							<option value="{{opt.Sector_Name}}" ng-repeat="opt in regCtrl.sectorsArray" ng-bind="opt.Sector_Name"></option>
+						</select>
+						<div class="error ng-hide" ng-messages="registerEmpForm.sectorsList.$error" ng-show="(registerEmpForm.sectorsList.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="required" class="jsExceedMsg">This field is required</div>
+						</div>
+					</div>
+
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Capabilities <span class="text-danger">*</span> </label>
+						<span class="footer-label">Maximum 3 selections</span>
+						<select multiple require-multiple class="form-control" name="capabilitiesList" ng-model="regCtrl.capabilitiesList" required ng-maxlength="3" ng-required="regCtrl.capabilitiesList.length == 0">
+							<option value="{{opt.Capability}}" ng-repeat="opt in regCtrl.capabalitiesArray" ng-bind="opt.Capability"></option>
+						</select>
+						<div class="error ng-hide" ng-messages="registerEmpForm.capabilitiesList.$error" ng-show="(registerEmpForm.capabilitiesList.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="required" class="jsExceedMsg">This field is required</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Digital Skills </label>
+						<span class="footer-label">Maximum 3 selections</span>
+						<select multiple require-multiple class="form-control" name="digitalSkillsList" ng-model="regCtrl.digitalSkillsList" required ng-maxlength="3" ng-required="regCtrl.digitalSkillsList.length == 0">
+							<option value="{{opt.Digital_Skill_Name}}" ng-repeat="opt in regCtrl.digitalSkillsArray" ng-bind="opt.Digital_Skill_Name"></option>
+						</select>
+						<div class="error ng-hide" ng-messages="registerEmpForm.digitalSkillsList.$error" ng-show="(registerEmpForm.digitalSkillsList.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="required" class="jsExceedMsg">This field is required</div>
+						</div>
+					</div>
+					<!-- Single Form Group -->
+					<div class="col-md-6 form-group">
+						<label class="label-heading">Languages </label>
+						<span class="footer-label">Maximum 3 selections</span>
+						<select multiple require-multiple class="form-control" name="languagesList" ng-model="regCtrl.languagesList" required ng-maxlength="3" ng-required="regCtrl.languagesList.length == 0">
+							<option value="{{opt.Language}}" ng-repeat="opt in regCtrl.languagesArray" ng-bind="opt.Language"></option>
+						</select>
+						<div class="error ng-hide" ng-messages="registerEmpForm.languagesList.$error" ng-show="(registerEmpForm.languagesList.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="required" class="jsExceedMsg">This field is required</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- Section Form Group End -->
+			<!-- Button Group Section -->
+			<div class="text-center btn-action">
+				<button class="btn btn-primary" type="submit">Submit</button>
+				<button class="btn btn-primary cancel" type="reset">Cancel</button>
+			</div>
+		</div>
+	</form>
+	<!-- FOOTER Container -->
+	<div class="height80"></div>
+	<footer class="footer">
+		<div class="container">
+			<!-- Capagemini Consulting Logo -->
+			<div class="footer-logo pull-left"> <img src="../system/images/cc-logo.png" width="225" height="23" alt="" /> </div>
+			<!-- Copyright Statement -->
+			<div class="pull-right"> <span class="copyright">&copy; 2015 Capgemini Consulting. All rights reserved.</span> </div>
+		</div>
+	</footer>
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="../system/js/angular-animate.min.js"></script>
+	<script src="../system/js/jquery.min.js"></script>
+	<script src="../system/js/bootstrap.min.js"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script src="../system/js/ie10-viewport-bug-workaround.js"></script>
+	<script src="../system/js/custom.js"></script>
+	<script src="register.app.js"></script>
+	<script src="register.service.js"></script>
+	<script src="../app/constantServices.js"></script>
+	<script src="../app/common.services.js"></script>
+	<script src="../app/masterDataService.js"></script>
+
+	</body>
+
+</html>

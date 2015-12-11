@@ -1,0 +1,96 @@
+<div class="clearfix" class="bodyContent"> 
+  
+  <!-- Fixed navbar -->
+   <!-- included the header for the people html in this  -->
+  <div name="commonHeader" id="head" ng-include="'templates/HeaderToolTemplate.html'" ></div>
+
+  <div>
+    </br>
+    </br>
+  </div>
+ 
+  <!-- Your Content -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 text-center profile-detail"> <img class="img-circle" width="80px" height="80px" src="{{peopleDetailCtrl.singlePeopleData.Profile_URL}}">
+       <h2> <span ng-bind="peopleDetailCtrl.singlePeopleData.First_Name"></span>  <span ng-bind="peopleDetailCtrl.singlePeopleData.Last_Name"></span></h2>
+        <p><span ng-bind="peopleDetailCtrl.singlePeopleData.Designation"></span><i class="fa fa-map-marker cc"></i> <span ng-bind="peopleDetailCtrl.singlePeopleData.Country"></span></p>
+        <!-- Comment Enabled by Shahul -->
+        <p class="text-light">In Capgemini Consulting since 2007</p>
+        <!-- // -->
+      </div>
+    </div>
+    <!-- {{peopleDetailCtrl.singlePeopleData}} -->
+    <div class="row">
+      <div class="media col-md-6 col-sm-6 col-xs-6 remove-margin">
+        <div class="media-body media-detail">
+          <label class="heading"><i class="fa fa-phone-square"></i> Work</label>
+          <p><a href="tel:{{peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Work_Phone_with_Country_Code}}" ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Work_Phone_with_Country_Code"></a></p>
+        </div>
+      </div>
+      <div class="media col-md-6 col-sm-6 col-xs-6">
+        <div class="media-body media-detail">
+          <label class="heading">Extension</label>
+          <p ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Extension">3768</p>
+        </div>
+      </div>
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading"><i class="glyphicon glyphicon-phone"></i> Cell</label>
+          <!--<p>{{Consultant.Mobile_No}}</p>-->
+          <p><a href="tel:{{peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Mobile_No_with_Country_Code}}" ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Mobile_No_with_Country_Code"></a></p>
+        </div>
+      </div>
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading"><i class="fa fa-envelope"></i> Email</label>
+          <!--<p>{{Consultant.Email_Id}}</p>-->
+          <p><a href="mailto:{{peopleDetailCtrl.singlePeopleData.Email_Id}}" ng-bind="peopleDetailCtrl.singlePeopleData.Email_Id"></a></p>
+        </div>
+      </div>
+      <!-- Media Header -->
+      <div class="media col-md-12 media-header">
+        <div class="media-body media-detail">
+          <h4>Skills</h4>
+        </div>
+      </div>
+      <!-- Media Heading Sectors-->
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading">Sector</label>
+          <p ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Sector"></p>
+        </div>
+      </div>
+      <!-- Media Heading Capabilities-->
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading">Capabilities</label>
+          <p ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Capabilities"></p>
+         <!--  <p>Business Model Transformation, ASE, Customer Experience</p> -->
+        </div>
+      </div>
+      
+      <!-- Media Heading -->
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading">Digital Skills</label>
+          <!-- <p>DCX</p> -->
+          <p ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Digital_Skills"></p>
+        </div>
+      </div>
+      
+      <!-- Media Heading -->
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+          <label class="heading">Languages</label>
+          <p ng-bind="peopleDetailCtrl.singlePeopleData.Consultant_Additional_Detail[0].Languages"></p>
+          <!-- <p>French, English, Italian</p> -->
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!--  ng-if="parentCtrl.includeFooter" -->
+  
+</div>

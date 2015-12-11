@@ -1,0 +1,49 @@
+<div class="bodyContent">
+    <div class="clearfix">
+        <!-- included the header for the people html in this  -->
+        <div name="commonHeader" id="head" ng-include="'templates/HeaderToolTemplate.html'"></div>
+        <!-- Pushy Menu -->
+        <!-- Your Content -->
+        <div class="container-fluid noMar">
+            <!-- included the searchBox from othe list control -->
+            <div ng-include="'filters/searchBox.html'"></div>
+            <div class="row content">
+                <!-- hiding the people detailViewUI flag to false as we do not whant to show  -->
+                <div ng-hide="peopleCtrl.detailViewUI">
+                    <ul>
+                        <!--  {{peopleCtrl.peopleList}} -->
+                        <!-- Single Profile List -->
+                        <li class="list-repeater animate-repeat" auto-list-divider auto-list-divider-value="{{listItems.First_Name}}" ng-repeat="listItems in peopleCtrl.peopleList | filter: searchFilter | orderBy: 'First_Name'">
+                            <!-- {{listItems}} -->
+                            <!-- {{listItems.User_Id}}  -->
+                            <a href="javascript:void(0);" ng-click="showPeopleDetailView(listItems.User_Id)">
+                                <div class="media">
+                                    <div class="col-md-12">
+                                        <div class="media-left"><img class="media-object img-circle" width="50px" height="50px" ng-src="{{listItems.Profile_URL}}"></div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">
+                        <span ng-bind="listItems.First_Name"></span>  <span ng-bind="listItems.Last_Name"></span>
+                      </h4>
+                                            <span class="designation" ng-bind="listItems.Designation"></span>
+                                            <span class="location" ng-bind="listItems.Country"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- // Single Profile List -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- call the details view of the people-->
+        <!-- <div ng-include="'/peopleDetail/peopleDetail.html'" id="peopleDetailView" ng-if="peopleCtrl.detailViewUI"></div> -->
+        <footer class="footer peopleFilterFooter" ng-show="peopleCtrl.showFilterFooterUI">
+            <div class="navbar navbar-default navbar-fixed-bottom">
+                <ul class="nav nav-pills nav-justified">
+                    <li class="active"> <a href="#filterPeople"><i class="fa fa-filter"></i><span class="filter-footer">Filter this list</span> </a> </li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+</div>

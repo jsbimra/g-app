@@ -1,0 +1,32 @@
+<div class="clearfix">
+    <!-- included the header for the people html in this  -->
+    <div name="commonHeader" id="head" ng-include="'templates/HeaderToolTemplate.html'"></div>
+    <!-- Your Content -->
+    <div class="container-fluid remove-padding-lr" id="page">
+        <div class="row site-main">
+            <input type="hidden" name="hidTabsClick" id="hidTabsClick" value="1" />
+            <div id="rootwizard" class="tabbable tabs-left secondary-col filter-panel">
+                <ul class="inner jsFilterLeftNav nav nav-tabs" >
+                    <li ng-repeat="item in filterCtrl.filterSNList" id="{{'left-nav-'+item.lsKey.toLowerCase().replace(' ','')}}" ng-class="{active:item.name == 'Country' }" class="highlight-filter-wrap"><a href="javascript:void(0)" ng-click="filterCtrl.loadListView(item.lsKey)" data-toggle="tab">{{item.name}}</a></li>
+                </ul>
+                <div class="tab-content primary-col">
+                    <div class="tab-pane1" id="tab1" ng-show="filterCtrl.showListView">
+                        <ul class="list-group checked-list-box">
+                            <li data-query-match="{{filterCtrl.queryMatchStr}}" ng-hide="itemList == filterCtrl.queryMatchStr" class="list-group-item" ng-click="filterCtrl.saveFilters($event,itemList,filterCtrl.categoryVal)" ng-repeat="itemList in filterCtrl.filterResultList" id="list-item-{{$index+1}}">{{itemList}}</li>
+                        </ul>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <button type="button" class="btn btn-default btn-block jsClearfilterBtn" ng-click="filterCtrl.clearFilters()">Clear Filter</button>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <button type="button" class="btn btn-primary btn-block jsApplyfilterBtn" ng-click="filterCtrl.applyFilters()">Apply Filter</button>
+            </div>
+        </div>
+    </footer>
+</div>

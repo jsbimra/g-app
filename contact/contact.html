@@ -1,0 +1,32 @@
+<div >
+
+  <!-- Fixed navbar -->
+   <!-- included the header for the people html in this  -->
+  <div name="commonHeader" id="head" ng-include="'templates/HeaderToolTemplate.html'" ></div>
+  
+  <div>
+    </br>
+    </br>
+  </div>
+  
+  <!-- Your Content -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="media col-md-12">
+        <div class="media-body media-detail">
+        <form name="contactForm" ng-submit="saveContact($event)" novalidate ng-class="{submitted:submitted}">
+            
+              <label class="heading"> Your Message</label>
+
+              <textarea class="form-control" rows="5" id="contactAdminMsgBox" name="contactAdminMsgBox" ng-model="contactCtrl.contactAdminMsgBox" required></textarea>
+              <span class="alert alert-danger" ng-show="(contactForm.contactAdminMsgBox.$dirty || submitted) && contactForm.contactAdminMsgBox.$error.required">Please enter the message.</span>
+              <br>
+              <button class="btn btn-block btn-warning" type="submit" ng-disabled = "(contactForm.$pristine || contactForm.$invalid)">Submit</button>
+           
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of the content -->
+</div>
