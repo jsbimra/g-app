@@ -9,11 +9,13 @@ html {
 
 /* Page selection colour */
 ::-moz-selection {
- background: #FFA86E;
- color: #000;
+ 	/*background: #FFA86E;*/
+	background: #ff96a9;
+ 	color: #000;
 }
 ::selection {
-	background: #FFA86E;
+	/*background: #FFA86E;*/
+	background: #ff96a9;
 	color: #000;
 }
 body {
@@ -63,7 +65,8 @@ a:focus, a:hover {
 	height: 100%;
 	left: 0;
 	top: 0;
-	background: rgba(0,0,0,1);
+	/*background: rgba(0,0,0,1);*/
+	background: rgb(139, 19, 69);
 	opacity: 1;
 }
 .loginLoader {
@@ -455,6 +458,7 @@ ul {
 }
 .footer {
 	position: absolute;
+	z-index:50;
 	bottom: 0;
 	width: 100%;
 	/* Set the fixed height of the footer here */
@@ -632,7 +636,7 @@ h4 {
 	background: #600d37;
 	color: #FFF;
 }
-.search-btn {
+.search-btn, .filter-btn {
 	width: 40px;
 	margin: 14px 0 0;
 	background: #600d37;
@@ -643,6 +647,7 @@ h4 {
 	margin-right: 0px;
 	position: relative;
 }
+.filter-btn.active i{color: #EF7625;}
 .search-btn:hover {
 	background: #600d37;
 	color: #FFF;
@@ -759,7 +764,7 @@ padding:5px 12px 6px;
 .footer .navbar-default {
 	background-color: #E4E4E4;
 	border-color: #857870;
-	z-index: 9999;
+	z-index: 999;
 }
 .footer a {
 	color: #6B6A6A;
@@ -824,7 +829,7 @@ li .media {
 	float: left !important;
 }
 .media:first-child {
-	margin-top: 6px;
+	/*margin-top: 6px;*/
 }
 .media-heading {
 	margin-top: 0;
@@ -1037,6 +1042,10 @@ header .headerIcon {
 	margin: 20px auto !important;
 	padding: 0 20px;
 }
+.modal-dialog-edit {
+	margin: 20px auto !important;
+	padding: 0 540px;
+}
 .modal-body {
 	/*padding: 0;*/
 	overflow: auto;
@@ -1147,9 +1156,14 @@ header .headerIcon {
 .list-repeater {
 	position: relative;
 }
+.list-repeater > a{clear: both; display: block;}
+.list-repeater.even{background-color:#F7F7F7;}
+.list-repeater.odd{}
+.list-repeater:first-child .media{border-top: 1px solid #e8e8e8;}
 .list-repeater .media {
 	padding-left: 20px;
-	margin-top:-20px;
+	/*margin-top:-20px;*/
+	padding-top: 15px;
 }
 .item-divider {
 	position: absolute;
@@ -1163,6 +1177,28 @@ header .headerIcon {
 	padding: 6px 10px 5px 11px;
 }
 
+/* alpha Scroll Styling */
+.custom-scroll-panel{position: relative;}
+.custom-scroll-panel .indexbar{
+	position: fixed;
+    top: 50%;
+    right: 30px;
+    color: #404443;
+    text-align: center;
+    margin-top: -200px;}
+.custom-scroll-panel .alpha{display: block; padding-bottom: 2px;  color:#8B1345; cursor: pointer;}
+.data-loading-text{
+	background: #eee; 
+	border-radius: 3px; 
+	padding:5px; 
+	font-size: 13px; 
+	text-align: center; 
+	width:100px; 
+	margin:0 auto; 
+	position: fixed; 
+  	bottom: 100px;
+  	left: 50%;
+  	margin-left: -50px;}
 
 /* Filter applied styles */
 .fa-filter.active {
@@ -1379,7 +1415,7 @@ table.table-responsive button {
 }
 .ui-autocomplete {
 	/*top:90px !important;	*/
-	width: 96.32% !important;
+	width: 96% !important;
 	max-height: 150px;
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
@@ -1512,7 +1548,7 @@ table.table-responsive button {
 }
 /*added by dhruv*/
 .bodyContent{
-	margin-bottom: 60px;
+	/* margin-bottom: 60px; causing issue on people list page after coming back from people detail page */
 	padding-top: 45px;
 }
 
@@ -1534,7 +1570,7 @@ table.table-responsive button {
   border-bottom: 1px solid rgb(161, 148, 10);}
 
 /* animation style for people Filter Footer */
-.peopleFilterFooter{opacity: 1; bottom:0;}
+.peopleFilterFooter{opacity: .8; bottom:0;}
 .peopleFilterFooter.ng-hide-add.ng-hide-add-active,
 .peopleFilterFooter.ng-hide-remove.ng-hide-remove-active {
   -webkit-transition: all linear 0.5s;
@@ -1580,7 +1616,7 @@ table.table-responsive button {
   /*width:100%;*/
 
   position: absolute;
-  z-index:1001;
+  z-index:900;
   top:0;
   left:0;
   right:0;

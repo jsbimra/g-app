@@ -9,11 +9,11 @@
             <div ng-include="'filters/searchBox.html'"></div>
             <div class="row content">
                 <!-- hiding the people detailViewUI flag to false as we do not whant to show  -->
-                <div ng-hide="peopleCtrl.detailViewUI">
-                    <ul>
-                        <!--  {{peopleCtrl.peopleList}} -->
+                <div class="jsInfiniteScrollPanel custom-scroll-panel" ng-hide="peopleCtrl.detailViewUI" infinite-scroll="peopleCtrl.loadAllPeopleList()" infinite-scroll-disabled="customInfiScroll.busy" infinite-scroll-distance="1" infinite-scroll-immediate-check="true">
+                    <ul ng-hide="peopleCtrl.peopleList.length==0">
+                        <!--  {{peopleCtrl.peopleList}} filter: searchFilter | -->
                         <!-- Single Profile List -->
-                        <li class="list-repeater animate-repeat" auto-list-divider auto-list-divider-value="{{listItems.First_Name}}" ng-repeat="listItems in peopleCtrl.peopleList | filter: searchFilter | orderBy: 'First_Name'">
+                        <li class="list-repeater animate-repeat22" auto-list-divider auto-list-divider-value="{{listItems.First_Name}}" ng-repeat="listItems in peopleCtrl.peopleList | orderBy: 'First_Name'" ng-if="peopleCtrl.peopleList.length !==0" ng-class="{even: $even, odd: $odd}">
                             <!-- {{listItems}} -->
                             <!-- {{listItems.User_Id}}  -->
                             <a href="javascript:void(0);" ng-click="showPeopleDetailView(listItems.User_Id)">
@@ -33,12 +33,16 @@
                         </li>
                         <!-- // Single Profile List -->
                     </ul>
+
+                    <div ng-show="peopleCtrl.peopleList.length==0" ng-class="{'hide': !peopleCtrl.showNoRecordsUI}" class="text-center well hide">No records available for applied filter. Please try with another <a href="#filterPeople">filters</a>.</div>
+
+                    <div ng-show="customInfiScroll.busy" ng-class="{show: customInfiScroll.busy}" class="hide data-loading-text">Loading...</div>
                 </div>
             </div>
         </div>
         <!-- call the details view of the people-->
         <!-- <div ng-include="'/peopleDetail/peopleDetail.html'" id="peopleDetailView" ng-if="peopleCtrl.detailViewUI"></div> -->
-        <footer class="footer peopleFilterFooter" ng-show="peopleCtrl.showFilterFooterUI">
+        <footer class="footer peopleFilterFooter hide" ng-class="{'show': peopleCtrl.showFilterFooterUI}">
             <div class="navbar navbar-default navbar-fixed-bottom">
                 <ul class="nav nav-pills nav-justified">
                     <li class="active"> <a href="#filterPeople"><i class="fa fa-filter"></i><span class="filter-footer">Filter this list</span> </a> </li>

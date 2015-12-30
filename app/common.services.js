@@ -11,14 +11,14 @@
 		//get the data from LS
 		commonService.getFromLS = function(key)
 		{
-			if(key && key != undefined){
-						var record = localStorage[key];	
-							if(record != '' && record != undefined){
-								return record;					
-							}
-							else{
-								return '';
-							}
+			if(key !== null && key !== undefined){
+				
+				var record = localStorage[key];	
+					if(record !== '' && record !== undefined){
+						return record;					
+					}else{
+						return '';
+					}
 				}//end of key check
 				else{
 				//console.log(localErrorKeyMsg + key);
@@ -71,7 +71,7 @@
     	}
 
     	//This function is used to define Verbs
-    	commonService.allVerbasFunction = function(baseURL,type,param){
+    	commonService.allVerbasFunction = function(baseURL,type,param,header){
         	var obj = {};
         	obj.getTypeData = function(){
             	return $http({
@@ -86,6 +86,15 @@
                     url: baseURL,
                     method: type,
                     data: param
+                 });   
+        	}
+
+        	obj.getPostDataWithHeader = function(){
+            	return $http({
+                    url: baseURL,
+                    method: type,
+                    data: param,
+                    headers: { 'Authorization': "Bearer " + header}
                  });   
         	}
         	return obj;
@@ -115,6 +124,14 @@
     		localStorage.removeItem(constantAPIService.PERSON_INFO);
     		//personal detail
     		localStorage.removeItem(constantAPIService.MY_PERSONALDETAILS);
+    		//filteredData
+    		localStorage.removeItem(constantAPIService.APPLIED_FILTERS_KEY);
+    		//filteredData Count
+    		localStorage.removeItem(constantAPIService.APPLIED_FILTERS_COUNT);
+    		//filteredData Count
+    		localStorage.removeItem(constantAPIService.APPLIED_FILTERS_OBJ);
+    		//filteredData Count
+    		localStorage.removeItem(constantAPIService.AD_DETAILS_INFO);
 
     	}//end
 
@@ -199,6 +216,43 @@
 			var spacing =  str.split(find).join(replace);
 			return spacing;//commonService.addSpaceAfterReplace(spacing,replace,", ");
 		}//
+
+		//logout functionality
+		commonService.registrationLogout = function(){
+			//commonAPIService.clearSpecificLS();
+			var pathLocation = commonService.getFromLS(constantAPIService.DEFAULT_PATH);
+			commonService.clearSS();
+			commonService.clearLS();
+			console.log(pathLocation);
+			window.location = pathLocation;
+			
+		}//getResult ended
+
+
+		 commonService.remainingCharCount = function(eleId){
+
+       		if(eleId){
+	        	var defaultMax = $('#'+eleId).attr('maxLength') != undefined ? $('#'+eleId).attr('maxLength') : 280, elementObj = $('#'+eleId);
+	        	
+	        	if(elementObj.val()){
+
+		            var defaultLength = elementObj.val().length;
+		            var strChars = defaultMax - defaultLength;
+		            //elementObj.siblings('.jsRemainingText').html(strChars + ' characters remaining');
+		            elementObj.siblings('.jsRemainingText').remove();
+		            elementObj.after('<span class="footer-label pull-right jsRemainingText">'+strChars + ' characters remaining'+'</span>');
+		            return strChars;
+				}	
+		        else{
+		            elementObj.siblings('.jsRemainingText').remove();
+	        		elementObj.after('<span class="footer-label pull-right jsRemainingText">'+defaultMax + ' characters remaining'+'</span>')
+        			return '';
+		        }
+
+       		}else{
+       			//console.log('Please pass element id');
+       		}
+        }//end remaining char count
 
 		// commonService.addSpaceAfterReplace = function(str,find,replace){
 		// 	//return str.split(find).joinreplace);

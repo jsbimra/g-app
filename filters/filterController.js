@@ -9,9 +9,9 @@
     'use strict';
 
     angular.module('xCCeedGlobalApp')
-        .controller('filterController', ['$scope', '$filter', '$location', '$timeout', 'constantAPIService', 'commonAPIService', filterController]);
+        .controller('filterController', ['$scope', '$filter', '$location', '$timeout', 'constantAPIService', 'commonAPIService','filterAPIService','peopleSharedAPIService', filterController]);
 
-    function filterController($scope, $filter, $location, $timeout, constantAPIService, commonAPIService) {
+    function filterController($scope, $filter, $location, $timeout, constantAPIService, commonAPIService,filterAPIService,peopleSharedAPIService) {
 
     	/* Define in custom.js to equal the height of sidebar with right panel */
     	columnHeight();
@@ -22,27 +22,35 @@
             tempCategoryArr = [],
             defaultCatNames = ['Country_Name', 'Sector_Name', 'Capability', 'Digital_Skill_Name', 'Designation', 'Language'];
 
+        //baseURL for filter
+        var baseURL = constantAPIService.BASE_SERVICE_URL + constantAPIService.routingDetails().PEOPLE_FILTER;
+        
         //OFF the loading controller
-        $scope.$parent.loadingFlag = false;
+        $scope.$parent.loadingFlag = true;
+
+        //this is to set the alert model object 
+        $scope.$parent.alertInfo = commonAPIService.modelPopUp();
         
         //this is use to set the header
         vm.filterHeader           = true;
         vm.showListView           = true;
         vm.categoryVal            = true;
+        vm.filterLoadingFlag      = false;
         vm.filterSNList           = constantAPIService.FILTER_SIDE_NAV_LIST;
         vm.loadListView           = loadListView;
         vm.saveFilters            = saveFilters;
         vm.clearFilters           = clearFilters;
         vm.applyFilters           = applyFilters;
-        vm.appliedFiltersByCatObj = {
-            Glo_Countries: 0,
-            Glo_Sectors: 0,
-            Glo_Capabalities: 0,
-            Glo_Digital_Skill: 0,
-            Glo_Designation: 0,
-            Glo_Language: 0
-        };
+        vm.appliedFiltersByCatObj = emptyAppliedFilterObj();
 
+        var lsAppliedObj = localStorage.getItem(constantAPIService.APPLIED_FILTERS_OBJ);
+        if(lsAppliedObj !== null &&  lsAppliedObj!== undefined && lsAppliedObj !== ''){
+             vm.appliedFiltersByCatObjValues = JSON.parse(lsAppliedObj)[0];
+        }else{
+
+            vm.appliedFiltersByCatObjValues = emptyAppliedFilterCatObj();
+   
+        }
         /* Watch Block's */
         
         /*$scope.$watch(angular.bind(this, function(categoryVal){
@@ -71,37 +79,44 @@
 
 	        		if(lskey === 'Glo_Countries'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[0]), '!Country_Name');
-		        		vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[0]);
+		        		//vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[0]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[0]));
                         //vm.categoryVal = 'Country_Name';
 	        		}
 
 	        		if(lskey === 'Glo_Sectors'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[1]), '!Sector_Name');
-		        		vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[1]);
+		        		//vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[1]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[1]));
+
                         //vm.categoryVal = 'Sector_Name';
 	        		}
 
-	        		if(lskey === 'Glo_Capabalities'){	        			
+	        		if(lskey === 'Glo_Capabilities'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[2]), '!Capability');
-                        vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[2]);
+                        //vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[2]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[2]));
                         //vm.categoryVal = 'Capability';
 	        		}
 
-	        		if(lskey === 'Glo_Digital_Skill'){	        			
+	        		if(lskey === 'Glo_Digital_Skills'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[3]), '!Digital_Skill_Name');
-                        vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[3]);
+                        //vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[3]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[3]));
                         //vm.categoryVal = 'Digital_Skill_Name';
 	        		}
 
 	        		if(lskey === 'Glo_Designation'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[4]), '!Designation');
-                        vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[4]);
+                        //vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[4]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[4]));
                         //vm.categoryVal = 'Designation';
 	        		}
 
 	        		if(lskey === 'Glo_Language'){	        			
                         //vm.filterResultList = $filter('filter')(filterOutLSKeyNames(lsDataObj, defaultCatNames[5]), '!Language');
-                        vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[5]);
+                        //vm.filterResultList = filterOutLSKeyNames(lsDataObj, defaultCatNames[5]);
+                        vm.filterResultList = $filter('orderBy')(filterOutLSKeyNames(lsDataObj, defaultCatNames[5]));
                         //vm.categoryVal = 'Language';
 	        		}
 
@@ -110,11 +125,16 @@
 
                     /* Update categoryVal model with lsKey */
                     vm.categoryVal = lskey !== undefined ? lskey : '';
+                    
 
         		}else{
         			console.log(lskey + ' Not found in the localStorage');
         			vm.filterResultList = ['No data available for '+lskey];
         		}
+
+                $timeout(function(){
+                    $scope.$parent.loadingFlag = false;
+                },500);
 
         	}
         }
@@ -175,42 +195,43 @@
 
         		var tarElem = angular.element($event.target), activeListCnt;
 
-        		if(!tarElem.hasClass('active-list')){
-	        		tarElem.append('<span class="state-icon fa fa-check"></span>').addClass('active-list');
+                if(!tarElem.hasClass('fa')){
+                    if(!tarElem.hasClass('active-list')){
+                        tarElem.append('<span class="state-icon fa fa-check"></span>').addClass('active-list');
 
-                    activeListCnt = $('.active-list').length;
+                        activeListCnt = $('.active-list').length;
 
-                    if($('.active.highlight-filter-wrap .jsFilterLeftNavBadge').length == 0){
-                        $('.active.highlight-filter-wrap').append('<span class="badge filter-badge jsFilterLeftNavBadge">'+activeListCnt+'</span>');
-                    }else{
+                        if($('.active.highlight-filter-wrap .jsFilterLeftNavBadge').length == 0){
+                            $('.active.highlight-filter-wrap').append('<span class="badge filter-badge jsFilterLeftNavBadge">'+activeListCnt+'</span>');
+                        }else{
+                            $('.active.highlight-filter-wrap .jsFilterLeftNavBadge')
+                                .text(activeListCnt)
+                                .css({backgroundColor: commonAPIService.getRandomColor() });
+                        }
+
+                    }
+                    else{
+
+                        /* Update activeListCnt on filter badge */
+                        activeListCnt = $('.active-list').length-1;
                         $('.active.highlight-filter-wrap .jsFilterLeftNavBadge')
                             .text(activeListCnt)
                             .css({backgroundColor: commonAPIService.getRandomColor() });
+
+                        /* toggle tick on selected active-list item */
+                        tarElem.find('span').remove();
+                        tarElem.removeClass('active-list');
+
+                        /* If there is no active-list item available remove the highlight filter dot*/
+                        if($('.active-list').length ==0){
+                            $('.active.highlight-filter-wrap').find('.jsFilterLeftNavBadge').remove();
+
+                        }
                     }
-
-        		}
-        		else{
-
-                    /* Update activeListCnt on filter badge */
-                    activeListCnt = $('.active-list').length-1;
-                    $('.active.highlight-filter-wrap .jsFilterLeftNavBadge')
-                        .text(activeListCnt)
-                        .css({backgroundColor: commonAPIService.getRandomColor() });
-
-                    /* toggle tick on selected active-list item */
-        			tarElem.find('span').remove();
-	        		tarElem.removeClass('active-list');
-
-                    /* If there is no active-list item available remove the highlight filter dot*/
-                    if($('.active-list').length ==0){
-                        $('.active.highlight-filter-wrap').find('.jsFilterLeftNavBadge').remove();
-
-                    }
-        		}
-	        	
-                /* Call: to update applied filters values to local storage */
-	        	updateLSAppliedFilters(item, cname, tarElem);
-
+                    
+                    /* Call: to update applied filters values to local storage */
+                    updateLSAppliedFilters(item, cname, tarElem);    
+                }
         	}
         }
 
@@ -245,13 +266,13 @@
         			tempAppliedArr.push(curSelItem);
 
                     /* Call to update active count's of list */
-                    updateActiveCountSelections(tarElem, cname);
+                    updateActiveCountSelections(tarElem, cname,curSelItem);
         		}
         		else if(index > -1){
         			tempAppliedArr.splice(index,1);
                     
                     /* Call to update active count's of list */
-                    updateActiveCountSelections(tarElem, cname);
+                    updateActiveCountSelections(tarElem, cname,curSelItem);
 
         		}
 
@@ -274,7 +295,7 @@
         	}
         }
 
-        function updateActiveCountSelections(tarElem, cname){
+        function updateActiveCountSelections(tarElem, cname,curSelItem){
             /* Saving count of no of records added to tempAppliedArr, based on each category type */
             if(tarElem !== undefined && cname !== undefined){
 
@@ -283,8 +304,29 @@
                 
                 vm.appliedFiltersByCatObj[cname] = qmSelLnt;
 
+                /* For creating object to save in localStorage */
+                var modelCname = cname;
+                    modelCname = modelCname.replace('Glo_','');
+
+                var index = vm.appliedFiltersByCatObjValues[modelCname].indexOf(curSelItem);
+
+                if(index === -1){
+                    //console.log('pushing to array');
+                    vm.appliedFiltersByCatObjValues[modelCname].push(curSelItem);
+                }
+                else if(index > -1){
+                    //console.log('removing form array');
+                    vm.appliedFiltersByCatObjValues[modelCname].splice(index,1);
+                }
+
+                var appliedObjArr = [];
+                    appliedObjArr.push(vm.appliedFiltersByCatObjValues);
+
+                //console.log(JSON.stringify(appliedObjArr));
+
                 /* Update to localStorage */
                 localStorage.setItem(constantAPIService.APPLIED_FILTERS_COUNT, JSON.stringify(vm.appliedFiltersByCatObj));
+                localStorage.setItem(constantAPIService.APPLIED_FILTERS_OBJ, JSON.stringify(appliedObjArr));
                 
             }
         }
@@ -344,7 +386,11 @@
         function clearFilters(){
             tempAppliedArr = [];
             localStorage.setItem(constantAPIService.APPLIED_FILTERS_KEY, tempAppliedArr);
+            localStorage.setItem(constantAPIService.APPLIED_FILTERS_OBJ, tempAppliedArr);
             
+            vm.appliedFiltersByCatObj = emptyAppliedFilterObj();
+            vm.appliedFiltersByCatObjValues = emptyAppliedFilterCatObj();
+
             //Remove tick under active list items on filter result view
             $('.active-list').find('span').remove().end().removeClass('active-list');
             
@@ -352,12 +398,39 @@
             $('.jsFilterLeftNavBadge').remove();
         }
 
-        function applyFilters(){
-            console.log('apply filters triggerd');
-            $location.path('/people');
+        //This function is to call the apply filter
+        function applyFilters(){ 
+            /* No items in tempAppliedArr empty the appliedFilter localStroage values */
+            if(tempAppliedArr.length === 0){
+                localStorage.setItem(constantAPIService.APPLIED_FILTERS_OBJ, tempAppliedArr);
+            }
+            
+            //This page will redirect to people page
+            filterAPIService.redirectToDetail();
+           
         }
 
+        function emptyAppliedFilterObj(){
+          return  {
+                Glo_Countries: 0,
+                Glo_Sectors: 0,
+                Glo_Capabilities: 0,
+                Glo_Digital_Skills: 0,
+                Glo_Designation: 0,
+                Glo_Language: 0
+            };
+        }
 
+        function emptyAppliedFilterCatObj(){
+          return  {
+                Countries       : [],
+                Sectors         : [],
+                Capabilities    : [],
+                Digital_Skills  : [],
+                Designation     : [],
+                Language        : []
+            };
+        }
     } //end of people controller
 
 })();

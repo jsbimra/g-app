@@ -8,6 +8,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<!-- Note there is no responsive meta tag here -->
+	<link rel="icon" href="../system/favicon.ico">
 	<title>Consultant Registration</title>
 	<!-- Font Awesome CSS -->
 	<link href="../system/css/font-awesome.css" rel="stylesheet">
@@ -40,8 +41,8 @@
 	<!-- Header Container -->
 	<header class="header">
 		<div class="container">
-			<div class="row text-center"> <span class="pull-left">Welcome, Brent Williams</span>
-				<button class="pull-right btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+			<div class="row text-center"> <span class="pull-left">Welcome, <span ng-bind="regCtrl.username"></span></span>
+				<!-- <button class="pull-right btn btn-default" ng-click="regCtrl.logoutRegistration()"><i class="fa fa-sign-out"></i> Logout</button> -->
 			</div>
 		</div>
 	</header>
@@ -57,7 +58,10 @@
 	  <div ng-message="required">This field is required</div>
 	</script>
 	<form name="registerEmpForm" id="registerEmpForm" ng-submit="regCtrl.submitRegisterEmpForm($event)" novalidate ng-class="{submitted:submitted}">
-		<div class="container">
+		<!-- <input type="text" name="hidFirstName" ng-model="regCtrl.hidFirstName" />
+		<input type="text" name="hidLastName" ng-model="regCtrl.hidLastName"/>
+		<input type="text" name="hidProfileURL" ng-model="regCtrl.hidProfileURL"/> -->
+		<div class="container" ng-hide="regCtrl.alreadyRegisterMsg">
 			<section class="heading">
 				<div class="row">
 					<h1 class="pull-left" ng-bind="regCtrl.title"></h1>
@@ -70,21 +74,21 @@
 					<div class="col-md-6 form-group">
 						<label class="label-heading">User ID </label>
 						<input type="text" class="form-control" placeholder="Enter Employee ID" 
-							ng-model="regCtrl.userid" name="userid" />
+							ng-model="regCtrl.userid" name="userid" ng-disabled="regCtrl.userid != '' " />
 					</div>
 					<!-- Single Form Group -->
 					<div class="col-md-6 form-group">
 						<label class="label-heading">Name </label>
 						<input type="text" class="form-control" placeholder="Enter Employee ID" 
-							ng-model="regCtrl.username" name="username" />
+							ng-model="regCtrl.username" name="username" ng-disabled="regCtrl.username != '' " />
 					</div>
 					<!-- Single Form Group -->
 					<div class="row">
 						<div class="col-md-6 form-group">
-							<label class="label-heading">Current Role <span class="text-danger">*</span> </label>
+							<label class="label-heading">Current Designation <span class="text-danger">*</span> </label>
 							<select class="form-control" ng-model="regCtrl.currentRole" name="currentRole" required>
-								<option value="">Select Your Role</option>
-								<option value="{{opt.Designation}}"  ng-repeat="opt in regCtrl.designationArray" ng-bind="opt.Designation"></option>
+								<option value="">Select Your Designation</option>
+								<option value="{{opt.Designation}}"  ng-repeat="opt in regCtrl.designationArray | orderBy: 'Designation' " ng-bind="opt.Designation"></option>
 							</select>
 							<div class="error ng-hide" ng-messages="registerEmpForm.currentRole.$error" ng-show="(registerEmpForm.currentRole.$dirty || submitted)" ng-messages-include="error-messages">
 							</div>
@@ -107,7 +111,7 @@
 							<label class="label-heading">Country <span class="text-danger">*</span> </label>
 							<select class="form-control" name="country" ng-model="regCtrl.country" required>
 								<option value="" selected>Select Country</option>
-								<option data-code="{{opt.Country_Code}}" value="{{opt.Country_Name}}" ng-repeat="opt in regCtrl.countriesArray">{{opt.Country_Name}}</option>
+								<option data-code="{{opt.Country_Code}}" value="{{opt.Country_Name}}" ng-repeat="opt in regCtrl.countriesArray | orderBy: 'Country_Name'">{{opt.Country_Name}}</option>
 							</select>
 							<div class="error ng-hide" ng-messages="registerEmpForm.country.$error" ng-show="(registerEmpForm.country.$dirty || submitted)" ng-messages-include="error-messages">
 							</div>
@@ -115,7 +119,7 @@
 
 						<div class="col-md-6 form-group">
 							<label class="label-heading">City</label>
-							<input type="text" class="form-control" placeholder="Enter City" name="city" ng-model="regCtrl.city" />
+							<input type="text" class="form-control" placeholder="Enter City" name="city" maxlength="100" ng-model="regCtrl.city" />
 						</div>
 					</div>
 				</div>
@@ -151,8 +155,8 @@
 					<!-- Single Form Group -->
 					<div class="col-md-6 form-group">
 						<label class="label-heading">Email ID <span class="text-danger">*</span></label>
-						<input type="email" value="brent.williams@capgemini.com" class="form-control" placeholder="Enter Email Address" 
-							name="emailId" ng-model="regCtrl.emailId" required>
+						<input type="email" value="brent.williams@capgemini.com" class="form-control" placeholder="Enter Email Address"
+							name="emailId" ng-model="regCtrl.emailId" ng-disabled="regCtrl.emailId != '' "  required>
 				       	<div class="error ng-hide" ng-messages="registerEmpForm.emailId.$error" ng-show="(registerEmpForm.emailId.$dirty || submitted)" ng-messages-include="error-messages">
 							<div ng-message="email">Your email address is invalid</div>
 						</div>
@@ -181,7 +185,10 @@
 					<!-- Single Form Group -->
 					<div class="col-md-6 form-group">
 						<label class="label-heading"> Extension </label>
-						<input type="text" value="" class="form-control" placeholder="Enter Extension" name="extenstion" ng-model="regCtrl.extenstion" />
+						<input type="text" value="" class="form-control" placeholder="Enter Extension" maxlength="15" name="extenstion" ng-model="regCtrl.extenstion" ng-pattern="/^\d+$/" />
+						<div class="error ng-hide" ng-messages="registerEmpForm.extenstion.$error" ng-show="(registerEmpForm.extenstion.$dirty || submitted)" ng-messages-include="error-messages">
+							<div ng-message="pattern">Only numeric allowed.</div>
+						</div>
 					</div>
 					<!-- Section Form Group End -->
 				</div>
@@ -201,7 +208,7 @@
 						<span class="footer-label">Maximum 3 selections</span>
 						<select multiple require-multiple class="form-control" name="sectorsList" ng-model="regCtrl.sectorsList" ng-maxlength="3" ng-required="regCtrl.sectorsList.length == 0">
 							<!-- <option value="" selected>Choose any three options</option> -->
-							<option value="{{opt.Sector_Name}}" ng-repeat="opt in regCtrl.sectorsArray" ng-bind="opt.Sector_Name"></option>
+							<option value="{{opt.Sector_Name}}" ng-repeat="opt in regCtrl.sectorsArray | orderBy: 'Sector_Name' " ng-bind="opt.Sector_Name"></option>
 						</select>
 						<div class="error ng-hide" ng-messages="registerEmpForm.sectorsList.$error" ng-show="(registerEmpForm.sectorsList.$dirty || submitted)" ng-messages-include="error-messages">
 							<div ng-message="required" class="jsExceedMsg">This field is required</div>
@@ -213,7 +220,7 @@
 						<label class="label-heading">Capabilities <span class="text-danger">*</span> </label>
 						<span class="footer-label">Maximum 3 selections</span>
 						<select multiple require-multiple class="form-control" name="capabilitiesList" ng-model="regCtrl.capabilitiesList" required ng-maxlength="3" ng-required="regCtrl.capabilitiesList.length == 0">
-							<option value="{{opt.Capability}}" ng-repeat="opt in regCtrl.capabalitiesArray" ng-bind="opt.Capability"></option>
+							<option value="{{opt.Capability}}" ng-repeat="opt in regCtrl.capabalitiesArray | orderBy: 'Capability' " ng-bind="opt.Capability"></option>
 						</select>
 						<div class="error ng-hide" ng-messages="registerEmpForm.capabilitiesList.$error" ng-show="(registerEmpForm.capabilitiesList.$dirty || submitted)" ng-messages-include="error-messages">
 							<div ng-message="required" class="jsExceedMsg">This field is required</div>
@@ -225,9 +232,14 @@
 					<div class="col-md-6 form-group">
 						<label class="label-heading">Digital Skills </label>
 						<span class="footer-label">Maximum 3 selections</span>
-						<select multiple require-multiple class="form-control" name="digitalSkillsList" ng-model="regCtrl.digitalSkillsList" required ng-maxlength="3" ng-required="regCtrl.digitalSkillsList.length == 0">
+						<!--<select multiple require-multiple class="form-control" name="digitalSkillsList" ng-model="regCtrl.digitalSkillsList" required ng-maxlength="3" ng-required="regCtrl.digitalSkillsList.length == 0">
 							<option value="{{opt.Digital_Skill_Name}}" ng-repeat="opt in regCtrl.digitalSkillsArray" ng-bind="opt.Digital_Skill_Name"></option>
+						</select>-->
+						<select multiple require-multiple class="form-control" name="digitalSkillsList" ng-model="regCtrl.digitalSkillsList"  ng-maxlength="3" >
+							<option value="{{opt.Digital_Skill_Name}}" ng-repeat="opt in regCtrl.digitalSkillsArray | orderBy: 'Digital_Skill_Name' " ng-bind="opt.Digital_Skill_Name"></option>
 						</select>
+						<div ng-show="regCtrl.digitalSkillsList.length !==0"><a href="javascript:void(0)" ng-click="regCtrl.digitalSkillsList = '' ">clear all</a></div>
+
 						<div class="error ng-hide" ng-messages="registerEmpForm.digitalSkillsList.$error" ng-show="(registerEmpForm.digitalSkillsList.$dirty || submitted)" ng-messages-include="error-messages">
 							<div ng-message="required" class="jsExceedMsg">This field is required</div>
 						</div>
@@ -236,9 +248,13 @@
 					<div class="col-md-6 form-group">
 						<label class="label-heading">Languages </label>
 						<span class="footer-label">Maximum 3 selections</span>
-						<select multiple require-multiple class="form-control" name="languagesList" ng-model="regCtrl.languagesList" required ng-maxlength="3" ng-required="regCtrl.languagesList.length == 0">
+						<!--<select multiple require-multiple class="form-control" name="languagesList" ng-model="regCtrl.languagesList" required ng-maxlength="3" ng-required="regCtrl.languagesList.length == 0">
 							<option value="{{opt.Language}}" ng-repeat="opt in regCtrl.languagesArray" ng-bind="opt.Language"></option>
+						</select>-->
+						<select multiple require-multiple class="form-control" name="languagesList" ng-model="regCtrl.languagesList"  ng-maxlength="3">
+							<option value="{{opt.Language}}" ng-repeat="opt in regCtrl.languagesArray | orderBy: 'Language' " ng-bind="opt.Language"></option>
 						</select>
+						<div ng-show="regCtrl.languagesList.length !==0"><a href="javascript:void(0)" ng-click="regCtrl.languagesList = '' ">clear all</a></div>
 						<div class="error ng-hide" ng-messages="registerEmpForm.languagesList.$error" ng-show="(registerEmpForm.languagesList.$dirty || submitted)" ng-messages-include="error-messages">
 							<div ng-message="required" class="jsExceedMsg">This field is required</div>
 						</div>
@@ -249,9 +265,18 @@
 			<!-- Button Group Section -->
 			<div class="text-center btn-action">
 				<button class="btn btn-primary" type="submit">Submit</button>
-				<button class="btn btn-primary cancel" type="reset">Cancel</button>
+				<!-- <button class="btn btn-primary cancel" type="reset" ng-click="regCtrl.resetForm();">Cancel</button> -->
 			</div>
 		</div>
+
+		<div ng-show="regCtrl.alreadyRegisterMsg" class="container">
+			<section class="well">
+				<div class="row">
+					<h1><div class="col-md-12 form-group text-center">Your data is already available in the system. Thank you!</div></h1>
+				</div>
+			</section>
+		</div>
+
 	</form>
 	<!-- FOOTER Container -->
 	<div class="height80"></div>

@@ -19,6 +19,7 @@
 
 		//this is to set the alert model object 
 		$scope.$parent.alertInfo = commonAPIService.modelPopUp();
+		
 
 		//Functions
 		$scope.Login = function($event){
@@ -39,12 +40,13 @@
 			var vm_hidekey = CryptoJS.enc.Utf8.parse($('#hidKey').val());
 			var vm_hideIv = CryptoJS.enc.Utf8.parse($('#hidIv').val());
 			var vm_hidSecret = $('#hidSecret').val()
-			console.log(vm);
+			//console.log(vm);
 			//console.log($scope);
-			var vm_userID = userID.value;
-			var vm_userPassword = userPassword.value;
+			var vm_userID = vm.userID;
+			var vm_userPassword = vm.userPassword;
 			var vm_DeviceID = commonAPIService.getFromLS(constantAPIService.DEVICE_ID);
 			var baseURL = constantAPIService.BASE_SERVICE_URL + constantAPIService.routingDetails().LOGIN_HTML;
+			var baseURLRegistration = constantAPIService.BASE_SERVICE_URL + constantAPIService.routingDetails().LOGIN_REGISTRATION;
 			
 			//convert the password in the encryoted token and store in the hidden field
 			var encryptionToken = loginAPIService.DatEncryptionToken(vm_userPassword,vm_hidekey,vm_hideIv,vm_hidSecret);
@@ -53,9 +55,17 @@
 			//object for the conversion to pass the value to the server.
 			var dataToServer = loginAPIService.DataToServer(vm_userID,$('#hidEncrypted').val(),vm_DeviceID);
 
-			//login service call (Not all the operation and setting is done in loginService)
-			loginAPIService.GetResult(baseURL,"POST",dataToServer,$scope);
-
+			//this is to check whether the data is for the application or the registration form
+			if (constantAPIService.IS_REGISTRATION === true){
+				//login service call (Not all the operation and setting is done in loginService)
+				loginAPIService.GetResultForRegistration(baseURLRegistration,"POST",dataToServer,$scope);
+			}
+			else
+			{
+				//login service call (Not all the operation and setting is done in loginService)
+				loginAPIService.GetResult(baseURL,"POST",dataToServer,$scope);
+			}
+			
 		}//end of login function
 
 		 

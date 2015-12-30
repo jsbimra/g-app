@@ -18,6 +18,7 @@
 		$scope.$on('$routeChangeStart', function(next, current) {
 			/* If current path is filter page, hide the default scrollbar on body or html */
 			if(current.originalPath == '/filterPeople'){
+			//if(current.originalPath == '/filterPeople' || current.originalPath == '/people'){ //for people page
 				$('html').css({overflow: 'hidden'});
 			}else{
 				$('html').css({overflow: 'auto'});

@@ -44,6 +44,19 @@ $(document).ready(function() {
             //$(this).find('i').removeClass('fa-search-minus');
             $(this).find('i').removeClass('fa-eye-slash');
             $(this).find('i').addClass('fa-search');
+
+            /* Important to empty the value to re-populate the people list records */
+            $('#autoCompleteSearch').val('');
+            $('#autoCompleteSearch').trigger('change');
+
+            var minLength = $( "#autoCompleteSearch" ).val().length;
+            console.log(minLength);
+
+            if(minLength === 0){
+                  angular.bind(this, function(nameFilter){
+                    return this.nameFilter = '';
+                });
+            }
         }
     });
 	
@@ -100,14 +113,16 @@ function toggler(divClass) {
     $("." + divClass).toggle();
 }
 
+//$('a[data-toggle="tooltip"]').tooltip('toggle');
+
 /* If modal is visible and user press space bar or enter key dismiss the modal */
-$(window).keypress(function(e){
+/*$(window).keypress(function(e){
     if((e.which == 13 && $('.modal.in').is(':visible')) || (e.keyCode == 32 && $('.modal.in').is(':visible'))){
     	
     	//$('.modal.in').modal('hide');
     	$('.modal.in').find('button').trigger('click');
     }
-});
+});*/
 
 //Formate Date function for date to post to server
 function formatDateToServer(date){

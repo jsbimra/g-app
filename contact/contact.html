@@ -18,7 +18,8 @@
             
               <label class="heading"> Your Message</label>
 
-              <textarea class="form-control" rows="5" id="contactAdminMsgBox" name="contactAdminMsgBox" ng-model="contactCtrl.contactAdminMsgBox" required></textarea>
+              <textarea class="form-control" rows="5" id="contactAdminMsgBox" name="contactAdminMsgBox" ng-model="contactCtrl.contactAdminMsgBox" maxlength="280" required></textarea>
+               <span class="footer-label pull-right jsRemainingText" id="textarea_feedback"></span>
               <span class="alert alert-danger" ng-show="(contactForm.contactAdminMsgBox.$dirty || submitted) && contactForm.contactAdminMsgBox.$error.required">Please enter the message.</span>
               <br>
               <button class="btn btn-block btn-warning" type="submit" ng-disabled = "(contactForm.$pristine || contactForm.$invalid)">Submit</button>

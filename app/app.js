@@ -3,7 +3,7 @@
 
 	'use strict';
 
-	angular.module('xCCeedGlobalApp',['ngRoute','ngMessages', 'ngAnimate']);
+	angular.module('xCCeedGlobalApp',['ngRoute','ngMessages', 'ngAnimate', 'infinite-scroll']);
 
 	//on run set the access token
 	angular.module('xCCeedGlobalApp')

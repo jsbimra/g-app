@@ -37,15 +37,6 @@ angular.module('xCCeedGlobalApp')
 			});//end of the service call
 		
 		}//getResult ended
-
-		// contactAPI.validateContact = function(msg,scope){
-		// 	if(msg === null || msg=== undefined || msg===""){
-		// 			//var redirectionLocation = pipelineFactory.callCloseModal();
-  //               commonAPIService.triggerModel("error-alert","redirect","Alert","Your message submitted successfully.","OK","","#people",scope.alertInfo);
-
-		// 	}
-		// }
-		
 		return contactAPI;
 	});//end of Contact
 })();

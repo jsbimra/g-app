@@ -2,10 +2,10 @@
 	'use strict';
 	
 angular.module('xCCeedGlobalApp')
-	.controller('contactController',['$scope','constantAPIService','commonAPIService','contactAPIService',contactController]);
+	.controller('contactController',['$scope','$timeout','constantAPIService','commonAPIService','contactAPIService',contactController]);
 		
 		//
-		function contactController($scope,constantAPIService,commonAPIService,contactAPIService){
+		function contactController($scope,$timeout,constantAPIService,commonAPIService,contactAPIService){
 			
 			//variable decelearation
 			var vm = this;
@@ -14,6 +14,19 @@ angular.module('xCCeedGlobalApp')
 			var baseURL = undefined;
 			//this is to set the alert model object 
 			$scope.$parent.alertInfo = commonAPIService.modelPopUp();
+
+			//text area count information
+    		setTimeout(function(){
+        		textAreaContentCount();
+    		},0);
+
+    		function textAreaContentCount() {
+        			commonAPIService.remainingCharCount('contactAdminMsgBox');
+        			$('#contactAdminMsgBox').keyup(function(){
+            		commonAPIService.remainingCharCount('contactAdminMsgBox')
+        		});
+
+    		}//end text area content count
 
 			//functions
 			$scope.saveContact = function($event){

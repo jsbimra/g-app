@@ -6,15 +6,18 @@
         .module('xCCeedGlobalApp')
         .factory('registerService', registerService);
 
-    registerService.$inject = ['$http'];
+    registerService.$inject = ['$http','commonAPIService'];
 
     /* @ngInject */
-    function registerService($http) {
+    function registerService($http,commonAPIService) {
         var service = {
             validateForm        : validateForm,
             saveFormDetails     : saveFormDetails,
             getLocalStorageData : getLocalStorageData,
-            formatPhoneNo       : formatPhoneNo
+            formatPhoneNo       : formatPhoneNo,
+            reformatToPipe      : reformatToPipe,
+            logoutRegister      : logoutRegistration
+            
         };
         return service;
 
@@ -30,18 +33,38 @@
                 if(formObj.$valid){
                 	return true;
                 }else{
+
+                    //Scroll to top
+                    $('.ng-invalid:eq(0)').animate({scrollTop: '0px'}, 500);
                 	$('input.ng-invalid:eq(0)').focus();
-                	$('select.ng-invalid:eq(0)').focus();
+                	$('select.ng-invalid:eq(0)').focus();   
                 	return false;
                 }
 
             }
         }
 
-        function saveFormDetails(postDataObj) {
+        function saveFormDetails(postDataObj,saveConsultantURL,accessToken,vm,errorFromService) {
             console.log(postDataObj);
             console.log(JSON.stringify(postDataObj));
-        	console.log('saveFormDetails fired!');
+            // var accessToken = commonAPIService.getFromLS(accessToken);    
+            //     accessToken = JSON.parse(accessToken);
+            vm.loadingFlag = true;
+            //Save service fucntion call is done
+            var obj = commonAPIService.allVerbasFunction(saveConsultantURL,"POST",postDataObj);
+                    
+                return obj.getPostData().success(function(data,status, header, config){
+                    
+                }).error(function(data,status, header, config){
+                    //Off of loading flag
+                    vm.loadingFlag = false;
+
+               
+                });
+
+            //
+
+        	//console.log('saveFormDetails fired!');
         }
 
         /* Returning localStorage data */
@@ -77,6 +100,23 @@
                 //var c = formatStr.replace(/-/g,'');
 
                 return formatStr;
+            }
+        }
+
+        // logout
+        function logoutRegistration(){
+            commonAPIService.registrationLogout();
+        }
+
+      
+
+        function reformatToPipe(arrValue){
+            if(arrValue !== undefined && angular.isArray(arrValue)){
+                var str     = arrValue.toString(),
+                    reStr   = str.replace(/,/g,'||');
+                    return reStr;
+            }else{
+                console.log('Something wrong with parameter values' + arrValue);
             }
         }
     }

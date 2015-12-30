@@ -12,8 +12,9 @@
                 <div class="tab-content primary-col">
                     <div class="tab-pane1" id="tab1" ng-show="filterCtrl.showListView">
                         <ul class="list-group checked-list-box">
-                            <li data-query-match="{{filterCtrl.queryMatchStr}}" ng-hide="itemList == filterCtrl.queryMatchStr" class="list-group-item" ng-click="filterCtrl.saveFilters($event,itemList,filterCtrl.categoryVal)" ng-repeat="itemList in filterCtrl.filterResultList" id="list-item-{{$index+1}}">{{itemList}}</li>
+                            <li data-query-match="{{filterCtrl.queryMatchStr}}" ng-hide="itemList == filterCtrl.queryMatchStr" class="list-group-item animate-repeat" ng-click="filterCtrl.saveFilters($event,itemList,filterCtrl.categoryVal)" ng-repeat="itemList in filterCtrl.filterResultList" id="list-item-{{$index+1}}">{{itemList}}</li>
                         </ul>
+                        <!-- <div ng-show="filterCtrl.filterLoadingFlag" ng-class="{hide: filterCtrl.filterLoadingFlag==false}" class="">Loading...</div> -->
                     </div>                    
                 </div>
             </div>

@@ -8,12 +8,12 @@
 				{
 					templateUrl: './login/login.html',
 					controller: 'loginController',
-					controllerAs: 'login',
+					controllerAs: 'loginctrl',
 					resolve: {
 						masterDataList: function(masterAPIService){
 							
 							//console.log( masterAPIService.getMasterData());
-							return masterAPIService.getMasterData();
+							return masterAPIService.HCMasterData();
 						}
 					}
 				}).
@@ -22,6 +22,13 @@
 					templateUrl: './login/login.html',
 					controller: 'loginController',
 					controllerAs: 'loginctrl'
+					// resolve: {
+					// 	masterDataList: function(masterAPIService){
+							
+					// 		//console.log( masterAPIService.getMasterData());
+					// 		return masterAPIService.getMasterData();
+					// 	}
+					// }
 					//publicAccess: true
 				}).
 				when('/people',

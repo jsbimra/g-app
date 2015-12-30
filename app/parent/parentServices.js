@@ -10,7 +10,7 @@ angular.module('xCCeedGlobalApp')
 			commonAPIService.clearSpecificLS();
 			commonAPIService.clearSS();
 			$rootScope.successLogin = undefined;
-			$location.path('/Login');
+			$location.path('/');
 			
 		}//getResult ended
 

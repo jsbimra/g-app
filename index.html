@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="xCCeedGlobalApp">
 <head>
+	<link rel="icon" href="system/favicon.ico">
 	<title>xCCeed-Global</title>
 
 	<!-- metata tag for the corome compability -->
@@ -47,14 +48,16 @@
 
 	<!-- script loading sections -->
 	<!-- Angular releated scripts -->
-	<script src="system/js/angular.min.js"></script>
+	<script src="system/js/jquery.min.js"></script> <!-- Need to load jquery prior to angular for infinite - scroll plugin -->
+ 	<script src="system/js/angular.min.js"></script>
 	<script src="system/js/angular-route.js"></script>
 	<script src="system/js/angular-animate.min.js"></script>
 	<script src="system/js/mobile-angular-ui.min.js"></script>
 	<!--<script src="system/js/jquery-1.10.2.js"></script>-->
-	<script src="system/js/jquery.min.js"></script>
 	<script src="system/js/jquery-ui.min.js"></script> 
 	<script src="system/js/bootstrap.min.js"></script>
+	<script src="system/js/ng-infinite-scroll.min.js"></script>
+	<script src="system/js/jquery.scrollTo.js"></script>
 	<script src="system/js/messages.js"></script>
 	<script src="system/js/custom.js"></script>
 	<script src="system/js/pushy.min.js"></script>
@@ -82,6 +85,7 @@
 	<script src="people/sharedServices.js"></script>
 	<script src="people/peopleController.js"></script>
 	<script src="people/peopleServices.js"></script>
+	<script src="people/infinite.factory.js"></script>
 
 	<!-- peopleDetail JS file initaited -->
 	<script src="people/peopleDetail/peopleDetailController.js"></script>
@@ -89,6 +93,7 @@
 
 	<!-- filter JS file initaited -->
 	<script src="filters/filterController.js"></script>
+	<script src="filters/filterServices.js"></script>
 
 	<!-- contact Js file initiated -->
 	<script src="contact/contactController.js"></script>

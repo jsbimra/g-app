@@ -32,7 +32,8 @@
 	</div>
 
 	<!-- this is used to set the right side icon button  -->
-	<div class="handburger" ng-if="peopleCtrl.peopleHeader">
+	<div class="handburger pull-right" ng-if="peopleCtrl.peopleHeader" ng-hide="loadingFlag">
+		<div ng-show="peopleCtrl.appliedFilterActive" class="pull-left filter-btn active"><a href="#filterPeople"><i class="fa fa-filter fa-1x"></i></a></div>
 		<div class="menu-btn"><i class="fa fa-bars fa-1x"></i></div>
 		<div class="search-btn" id="searchBtn"><a><i class="fa fa-search"></i></a></div>
 	</div>

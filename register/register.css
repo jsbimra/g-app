@@ -692,8 +692,9 @@ footer.footer {
 	height: 100%;
 	left: 0;
 	top: 0;
-	background: rgba(0,0,0,1);
-	opacity: .5;
+	/*background: rgba(0,0,0,1);*/
+	background: rgb(139, 19, 69);
+	/*opacity: .5;*/
 }
 .loadingWrap .spinner {
 	position: absolute;
