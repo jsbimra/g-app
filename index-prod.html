@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
 
-        <!-- custom css -->
+    <!-- custom css -->
     <!-- <link href="system/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="system/css/font-awesome.min.css" rel="stylesheet" /> -->
     <!-- <link href="system/css/font-face.css" rel="stylesheet" /> Already included in custom.css file at top -->
@@ -21,7 +21,6 @@
 
     <!-- Merged all the right file into single css file -->
     <link href="system/cssbuild/appcompiled.css" rel="stylesheet" /> 
-
 </head>
 <body>
 	<div ng-controller="parentController as parentCtrl" class="viewParentContainer">
@@ -51,57 +50,24 @@
 
 	<!-- script loading sections -->
 	<!-- Angular releated scripts -->
-	<script src="system/js/jquery.min.js"></script> <!-- Need to load jquery prior to angular for infinite - scroll plugin -->
+	<!-- Need to load jquery prior to angular for infinite - scroll plugin -->
+	<!--
+	<script src="system/js/jquery.min.js"></script> 
 	<script src="system/js/modernizr.custom.min.js"></script>
  	<script src="system/js/angular.min.js"></script>
 	<script src="system/js/angular-route.js"></script>
 	<script src="system/js/angular-animate.min.js"></script>
-	<!--
-	<script src="system/js/mobile-angular-ui.min.js"></script> not in use
-	<script src="system/js/jquery-1.10.2.js"></script>-->
 	<script src="system/js/jquery-ui.min.js"></script> 
 	<script src="system/js/bootstrap.min.js"></script>
 	<script src="system/js/ng-infinite-scroll.min.js"></script>
 	<script src="system/js/jquery.scrollTo.js"></script>
 	<script src="system/js/messages.js"></script>
-	<script src="system/js/custom.js"></script>
 	<script src="system/js/pushy.min.js"></script>
-
-
-	<!-- encryption releated JS file loaded -->
 	<script src="system/js/Crypto.js"></script>
+	--> <!-- encryption releated JS file loaded -->
 
-	<!-- app releated scripts -->
-	<script src="app/app.js"></script>
-	<script src="app/route-config.js"></script>
-	<script src="app/masterDataService.js"></script>
-	<script src="app/constantServices.js"></script>
-	<script src="app/common.services.js"></script>
-	<script src="app/parent/parent.controller.js"></script>
-	<script src="app/parent/parentServices.js"></script>
-	<script src="system/js/ionic-ion-autoListDivider.js"></script>
-
-
-	<!-- login JS file initiated -->
-	<script src="login/loginController.js"></script>
-	<script src="login/loginServices.js"></script>
-
-	<!-- people JS file initiated -->
-	<script src="people/sharedServices.js"></script>
-	<script src="people/peopleController.js"></script>
-	<script src="people/peopleServices.js"></script>
-	<script src="people/infinite.factory.js"></script>
-
-	<!-- peopleDetail JS file initaited -->
-	<script src="people/peopleDetail/peopleDetailController.js"></script>
-	<script src="people/peopleDetail/myDetailsController.js"></script>
-
-	<!-- filter JS file initaited -->
-	<script src="filters/filterController.js"></script>
-	<script src="filters/filterServices.js"></script>
-
-	<!-- contact Js file initiated -->
-	<script src="contact/contactController.js"></script>
-	<script src="contact/contactServices.js"></script>
+	<script src="build/all.files.js"></script>
+	<script src="build/app.min.js"></script>
+	
 </body>
 </html>

@@ -6,7 +6,7 @@ angular.module('xCCeedGlobalApp').value('THROTTLE_MILLISECONDS', 250);
 angular.module('xCCeedGlobalApp')
 	.controller('peopleController',['$scope','$http', 'infiniteFactory', 'constantAPIService','commonAPIService','peopleAPIService','peopleSharedAPIService','filterAPIService',peopleController]);
 		
-	//
+	/* @ngInject */
 	function peopleController($scope,$http, infiniteFactory, constantAPIService,commonAPIService,peopleAPIService,peopleSharedAPIService,filterAPIService){
 		
 		//console.log('people controller');
@@ -18,6 +18,7 @@ angular.module('xCCeedGlobalApp')
 		var filterCounter = 1;
 		var peopleFlagCounter = 1;//This flag is to stop the scroll call to web service if there is no data found.
 		var filterFlagCounter = 1;
+		
 
 		//this is to set the alert model object 
 		$scope.$parent.alertInfo = commonAPIService.modelPopUp();
@@ -27,9 +28,15 @@ angular.module('xCCeedGlobalApp')
 		vm.showFilterFooterUI = false;
 		vm.showNoRecordsUI = false;
 		vm.appliedFilterActive = false;
+		vm.firstCallRequested = false;
 		vm.peopleList = [];
 		vm.searchResultArr = [];
 		vm.createAlphaScroll = createAlphaScroll;
+		vm.checkInternetConnection = false;
+		
+		//ON Loading flag
+		$scope.$parent.loadingFlag = true; //vm.peopleList.length == 0 ? false : true;
+				
 		vm.loadAllPeopleList = loadAllPeopleList;
 		
 
@@ -38,126 +45,143 @@ angular.module('xCCeedGlobalApp')
 		//console.log($scope.customInfiScroll.items);
 
 		
-		//ON Loading flag
-		$scope.$parent.loadingFlag = true; //vm.peopleList.length == 0 ? false : true;
-		
 		/* Load people list on every load */
-
 		//loadAllPeopleList();
 
 		//This function is to load all the information
 		function loadAllPeopleList(){
+			//this is to check the internet connection
+			if (commonAPIService.checkNetworkConnection() === 'ONL'){
+				vm.checkInternetConnection = false;//This flag is to check the internet connection 			
+
+				/* Make first call requested flag true */
+				vm.firstCallRequested = true;
+
+				var appliedFilterList = filterAPIService.getAppliedFiltersObj();
+
+				//console.log(appliedFilterList);
+
+				if((!$('#searchBtn .fa').hasClass('fa-eye-slash') && vm.nameFilter.length === 0) || 
+					($('#searchBtn .fa').hasClass('fa-eye-slash') && vm.nameFilter.length === 0) )
+				{
+					
+					if(appliedFilterList !== undefined && appliedFilterList !== null && appliedFilterList.length > 0){
+										
+						
+						if(filterFlagCounter === 1)
+						{
+							var resultObj = $scope.customInfiScroll.nextPage(peopleAPIService.appliedFilterServiceURL,'POST', filterAPIService.DataToServer(),filterCounter,$scope);
+
+							resultObj.success(function(data,status, header, config){
+								vm.peopleList = $scope.customInfiScroll.items;
+								
+								//vm.showFilterFooterUI = vm.peopleList !== undefined && vm.peopleList !== null ? (vm.peopleList.length<7 ? true: false) : false;
+								filterCounter += 1;
+
+								//OFF Loading flag
+								$scope.$parent.loadingFlag = false;
+
+								/* set No records message flag */
+								vm.showNoRecordsUI = true;
+
+								vm.showFilterFooterUI = true;
+								vm.appliedFilterActive = true;
+
+								if(data.length === 0){
+									filterFlagCounter = 0;
+								}
+
+								//binding auto complete on succes of request and let the dom get ready
+								bindAutoComplete();
+
+							});
+
+							//console.log('If condition');
+						}//filterFlagCounter
+					}//end if
+					else{
+						if(peopleFlagCounter === 1)
+						{
+
+							//console.log('Else condition');
+							//Off the filter icon
+							vm.appliedFilterActive = false;
+							//$scope.$parent.loadingFlag = true;
 
 
-			var appliedFilterList = filterAPIService.getAppliedFiltersObj();
+							//get the list all of the employee (filter not applied)
+							var userProfilesURL=baseURL.concat("/GetAll/");
 
-			//console.log(appliedFilterList);
+							var resultObj = $scope.customInfiScroll.nextPage(userProfilesURL, "GET", undefined,filterCounter,$scope);
 
-			if((!$('#searchBtn .fa').hasClass('fa-eye-slash') && vm.nameFilter.length === 0) || 
-				($('#searchBtn .fa').hasClass('fa-eye-slash') && vm.nameFilter.length === 0) )
+							resultObj.success(function(data,status, header, config){
+								//vm.peopleList = data;
+								vm.peopleList = $scope.customInfiScroll.items;
+
+								//This value is value is scrolled the option for the filter footer is applied
+								//vm.showFilterFooterUI = vm.peopleList !== undefined && vm.peopleList !== null ? (vm.peopleList.length<7 ? true: false) : false;
+
+								//myAdditionalDetail
+								myAdditionalDetail();
+
+								//OFF Loading flag
+								$scope.$parent.loadingFlag = false;
+								
+								vm.showFilterFooterUI = true;
+
+								/* set No records message flag */
+								vm.showNoRecordsUI = true;
+
+								if(data.length === 0){
+									peopleFlagCounter = 0;
+								}
+								
+								//console.log(JSON.stringify(vm.peopleList));
+								
+								//binding auto complete on succes of request and let the dom get ready
+								bindAutoComplete();
+							});
+						}//peopleFlagcounter
+					
+						
+					}//end else
+
+					
+				}//end nameFilter
+
+			}//CheckInternetConnection
+			else
 			{
+				vm.peopleList = [];
+				$scope.$parent.loadingFlag = false;
+				vm.checkInternetConnection = true;
 				
-				if(appliedFilterList !== undefined && appliedFilterList !== null && appliedFilterList.length > 0){
-									
-					
-					if(filterFlagCounter === 1)
-					{
-						var resultObj = $scope.customInfiScroll.nextPage(peopleAPIService.appliedFilterServiceURL,'POST', filterAPIService.DataToServer(),filterCounter,$scope);
-
-						resultObj.success(function(data,status, header, config){
-							vm.peopleList = $scope.customInfiScroll.items;
-							
-							//vm.showFilterFooterUI = vm.peopleList !== undefined && vm.peopleList !== null ? (vm.peopleList.length<7 ? true: false) : false;
-							filterCounter += 1;
-
-							//OFF Loading flag
-							$scope.$parent.loadingFlag = false;
-
-							/* set No records message flag */
-							vm.showNoRecordsUI = true;
-
-							vm.showFilterFooterUI = true;
-							vm.appliedFilterActive = true;
-
-							if(data.length === 0){
-								filterFlagCounter = 0;
-							}
-
-
-						});
-
-						//console.log('If condition');
-					}//filterFlagCounter
-				}//end if
-				else{
-					if(peopleFlagCounter === 1)
-					{
-
-						//console.log('Else condition');
-						//Off the filter icon
-						vm.appliedFilterActive = false;
-						//$scope.$parent.loadingFlag = true;
-
-
-						//get the list all of the employee (filter not applied)
-						var userProfilesURL=baseURL.concat("/GetAll/");
-
-						var resultObj = $scope.customInfiScroll.nextPage(userProfilesURL, "GET", undefined,filterCounter,$scope);
-
-						resultObj.success(function(data,status, header, config){
-							//vm.peopleList = data;
-							vm.peopleList = $scope.customInfiScroll.items;
-
-							//This value is value is scrolled the option for the filter footer is applied
-							//vm.showFilterFooterUI = vm.peopleList !== undefined && vm.peopleList !== null ? (vm.peopleList.length<7 ? true: false) : false;
-
-							//myAdditionalDetail
-							myAdditionalDetail();
-
-							//OFF Loading flag
-							$scope.$parent.loadingFlag = false;
-							
-							vm.showFilterFooterUI = true;
-
-							/* set No records message flag */
-							vm.showNoRecordsUI = true;
-
-							if(data.length === 0){
-								peopleFlagCounter = 0;
-							}
-							
-						});
-					}//peopleFlagcounter
 				
-					
-				}//end else
-
-				//binding auto complete
-				bindAutoComplete();
-			}//end nameFilter
-			
-			//vm.createAlphaScroll();
+			}
+				
+				//vm.createAlphaScroll();
 
 		}///
 
-		//to search the value on the search
-		$scope.searchFilter = function(listItems)
-		{
-			// client side filtering stoped///////
-			var  filterSearchValue = vm.nameFilter;
-			if (filterSearchValue != ""){
-				var keyWord = new RegExp(filterSearchValue,'i');
-				//console.log	(keyWord.test);
-			}
+		//This is used to do the filtering at client side
+		// //to search the value on the search
+		// $scope.searchFilter = function(listItems)
+		// {
+		// 	// client side filtering stoped///////
+		// 	var  filterSearchValue = vm.nameFilter;
+		// 	if (filterSearchValue != ""){
+		// 		var keyWord = new RegExp(filterSearchValue,'i');
+		// 		//console.log	(keyWord.test);
+		// 	}
 
-			//Searching is based on the first and last name
-			return !filterSearchValue || keyWord.test(listItems.First_Name) || keyWord.test(listItems.Last_Name);
-			///////////////////////////////
+		// 	//Searching is based on the first and last name
+		// 	return !filterSearchValue || keyWord.test(listItems.First_Name) || keyWord.test(listItems.Last_Name);
+		// 	///////////////////////////////
 
-			//server side filter
+		// 	//server side filter
 			
-			//
-		}//end of search
+		// 	//
+		// }//end of search
 
 
 		//redirect to details view
@@ -187,39 +211,48 @@ angular.module('xCCeedGlobalApp')
 
 		//This is to pull the data for the personal information from the system
 		function manipulationAdditonalDetail(baseURL,fromLocation){
-			//OFF Loading flag
-			//$scope.$parent.loadingFlag = true;
-			
-			peopleSharedAPIService.GetAdditionalDataResult(baseURL,"GET",$scope).then(function(resp){
-				if(resp !== null && resp !== undefined){
-
-						if('data' in resp){
-							if(fromLocation == "peoplelist")
-							{
-								vm.detailViewRecord = resp.data;	
-
-								peopleSharedAPIService.clearPeopleData();
-								peopleSharedAPIService.setPeopleData(vm.detailViewRecord);
-
-								//location redirect;
-								peopleAPIService.redirectToDetail();
-							}
-							if(fromLocation == "myprofilelist")
-							{
-								vm.personalDetailViewRecord = resp.data;
-
-								//save the personal details information in the ls
-								commonAPIService.setInLS(constantAPIService.MY_PERSONALDETAILS,vm.personalDetailViewRecord);
-							}
-
-							//OFF Loading flag
-							//$scope.$parent.loadingFlag = false;
-
+			//ON Loading flag
+			$scope.$parent.loadingFlag = true;
+			//this is to check the internet connection
+			if (commonAPIService.checkNetworkConnection() === 'ONL'){
+				peopleSharedAPIService.GetAdditionalDataResult(baseURL,"GET",$scope).then(function(resp){
+					if(resp !== null && resp !== undefined){
 							
+							//OFF Loading flag
+							$scope.$parent.loadingFlag = false;
+
+							if('data' in resp){
+								if(fromLocation == "peoplelist")
+								{
+									vm.detailViewRecord = resp.data;	
+
+									peopleSharedAPIService.clearPeopleData();
+									peopleSharedAPIService.setPeopleData(vm.detailViewRecord);
+									
+									//location redirect;
+									peopleAPIService.redirectToDetail();
+								}
+								if(fromLocation == "myprofilelist")
+								{
+									vm.personalDetailViewRecord = resp.data;
+
+									//save the personal details information in the ls
+									commonAPIService.setInLS(constantAPIService.MY_PERSONALDETAILS,vm.personalDetailViewRecord);
+								}
+
+								//OFF Loading flag
+								//$scope.$parent.loadingFlag = false;
+
+								
+							}
 						}
-					}
-				//console.log(data);
-				});
+					//console.log(data);
+					});
+			}
+			else{
+				$scope.$parent.loadingFlag	= false;
+				commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+			}
 		}//end manipulationAdditonalDetail
 
 		//Logged ins user additional details information is loaded.
@@ -232,9 +265,17 @@ angular.module('xCCeedGlobalApp')
 					
 						if(myProfileData.length > 0)
 						{
-							baseAdditionDetailURLConcat = undefined;
-							baseAdditionDetailURLConcat=baseAdditionDetailURL.concat(myProfileData[0].User_Id);
-							manipulationAdditonalDetail(baseAdditionDetailURLConcat,"myprofilelist");
+							//this is to check the internet connection
+							if (commonAPIService.checkNetworkConnection() === 'ONL'){
+								baseAdditionDetailURLConcat = undefined;
+								baseAdditionDetailURLConcat=baseAdditionDetailURL.concat(myProfileData[0].User_Id);
+								manipulationAdditonalDetail(baseAdditionDetailURLConcat,"myprofilelist");
+							}
+							else
+							{
+								$scope.$parent.loadingFlag	= false;
+								commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+							}
 						}
 					}//if myProfileData
 			}//my people List	
@@ -318,9 +359,10 @@ angular.module('xCCeedGlobalApp')
 		}
 
 		/* Autocomplete binding and functioning */
-		function bindAutoComplete(conNameArray){
-
-            $("#autoCompleteSearch").autocomplete({
+		function bindAutoComplete(){
+			//console.log('invoked bind method');
+            
+			$("#autoCompleteSearch").autocomplete({
                 focus: function(event, ui) {
                     $("#autoCompleteSearch").val(ui.item.label);
                 },
@@ -329,44 +371,52 @@ angular.module('xCCeedGlobalApp')
                 	var searchData = {
                     		value: request.term
                 	};
+                	//this is to check the internet connection
+					if (commonAPIService.checkNetworkConnection() === 'ONL'){
+				        $http({
+		                    method: 'POST',
+		                    url: constantAPIService.BASE_SERVICE_URL + "Profiles/Search",
+		                    data: searchData
+		                }).success(function(data, status, headers, config) {
+				    		//console.log(data);
 
-			        $http({
-	                    method: 'POST',
-	                    url: constantAPIService.BASE_SERVICE_URL + "Profiles/Search",
-	                    data: searchData
-	                    
-	                }).
-				    success(function(data, status, headers, config) {
-			    		//console.log(data);
+				    		vm.searchResultArr = [];
 
-			    		vm.searchResultArr = [];
+				    		if(data != null){
+				    			var finalSearchResult = data, objSearchResult = [];
+				    				
 
-			    		if(data != null){
-			    			var finalSearchResult = data, objSearchResult = [];
-			    				
+				    			//console.log(finalSearchResult); 
+				    			
+				    			//This code is commented to not to show the value in the autocomplete list box directly show the data in peoplelist
+				    			forEach(finalSearchResult,function(v,i)
+				    			{
+				    				var dataaa={label: finalSearchResult[i].User_Id,
+				    					value:  finalSearchResult[i].First_Name + " " + finalSearchResult[i].Last_Name}
 
-			    			//console.log(finalSearchResult); 
-			    			
-			    			//This code is commented to not to show the value in the autocomplete list box directly show the data in peoplelist
-			    			forEach(finalSearchResult,function(v,i)
-			    			{
-			    				var dataaa={label: finalSearchResult[i].User_Id,
-			    					value:  finalSearchResult[i].First_Name + " " + finalSearchResult[i].Last_Name}
+				    				//objSearchResult.push(finalSearchResult[i].First_Name + " " + finalSearchResult[i].Last_Name);
+				    				vm.searchResultArr.push(finalSearchResult[i]);
+				    			});
+				    			// /response(objSearchResult.slice());	
 
-			    				//objSearchResult.push(finalSearchResult[i].First_Name + " " + finalSearchResult[i].Last_Name);
-			    				vm.searchResultArr.push(finalSearchResult[i]);
-			    			});
-			    			// /response(objSearchResult.slice());	
+	        					vm.peopleList = vm.searchResultArr;
 
-        					vm.peopleList = vm.searchResultArr;
+	        					/* Remove autocomplete-loading class from input field on success */
+				    			$("#autoCompleteSearch").removeClass('ui-autocomplete-loading');
+				    		}
+				    		
+				    	}).error(function(data,status,headers,config){
+				    		$scope.$parent.loadingFlag = false;
 
-			    			
-			    		}
-			    		
-			    	}).error(function(data,status,headers,config){
-			    		//this is to show the service error
-						commonAPIService.triggerModel("error-alert","alert","Error",constantAPIService.SERVICE_ERROR,"OK","","",$scope.alertInfo);
-			    	});
+				    		//this is to show the service error
+							commonAPIService.triggerModel("error-alert","alert","Error",constantAPIService.SERVICE_ERROR,"OK","","",$scope.alertInfo);
+				    	});
+				    }//if online check
+				    else
+				    {
+				    	$scope.$parent.loadingFlag	= false;
+						commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+				    }//end of online check
 			    },
 			    minLength: 3
             });
@@ -377,10 +427,23 @@ angular.module('xCCeedGlobalApp')
         $scope.$watch(angular.bind(this, function(nameFilter){
         	return this.nameFilter;
         }),function(newVal, oldVal){
-        	if(newVal.length === 0){
-        		filterFlagCounter = 1;
-        		peopleFlagCounter = 1;
-        		loadAllPeopleList();
+
+       		//console.log('entered into watch');
+
+        	if(newVal.length === 0 && vm.firstCallRequested){
+       			
+       			//console.log('entered into length condition ');
+
+       			vm.firstCallRequested = false;
+        		filterFlagCounter     = 1;
+        		peopleFlagCounter     = 1;
+
+       			//console.log('firstCallRequested ' + vm.firstCallRequested);
+
+       			/* Only call the loadAllPeopleList method when firstCallRequested set to false */
+        		if(vm.firstCallRequested === false){
+	        		loadAllPeopleList();
+        		}
         	}
         });
         /* Model WATCH Block end */

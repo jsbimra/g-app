@@ -1,4 +1,5 @@
 @import url("font-face.css");
+
 html {
 	position: relative;
 	min-height: 100%;
@@ -364,7 +365,12 @@ label.filter {
 }
 /* Login Start Here */
 .login-box {
-	margin-top: 0;/*background-color: #000000;*/
+	margin-top: -240px;/*background-color: #000000;*/
+	top: 50%;
+	left: 50%;
+	margin-left: -150px;
+	width: 300px;
+	position: fixed; 
 }
 .login {
 	margin-top: 0px;
@@ -1188,17 +1194,24 @@ header .headerIcon {
     margin-top: -200px;}
 .custom-scroll-panel .alpha{display: block; padding-bottom: 2px;  color:#8B1345; cursor: pointer;}
 .data-loading-text{
-	background: #eee; 
-	border-radius: 3px; 
-	padding:5px; 
-	font-size: 13px; 
-	text-align: center; 
-	width:100px; 
-	margin:0 auto; 
-	position: fixed; 
-  	bottom: 100px;
-  	left: 50%;
-  	margin-left: -50px;}
+	background: #8E1F56;
+	padding: 28px 5px 6px;
+	font-size: 13px;
+	text-align: center;
+	margin: 0 auto;
+	position: fixed;
+	bottom: 50%;
+	left: 50%;
+	margin-left: -50px;
+	margin-bottom: -44px;
+	border: 1px solid #9D2877;
+	font-weight: bold;
+	color: #fff;
+	text-shadow: none;
+	border-radius: 50%;
+	height: 80px;
+	width: 80px;
+	transform: scale(1.1);}
 
 /* Filter applied styles */
 .fa-filter.active {
@@ -1284,7 +1297,9 @@ header .headerIcon {
 	width: 1%;
 }*/
 
-
+.modal-dialog-edit {
+	padding: 0 30px;
+}
 .sub-nav-1>.nav-tabs.nav-justified>li {
 	float: left;
 	width: 100%;
@@ -1326,6 +1341,9 @@ header .headerIcon {
 	display: table-cell;
 	width: 1%;
 }*/
+.modal-dialog-edit {
+	padding: 0 30px;
+}
 .sub-nav-1>.nav-tabs.nav-justified>li {
 	float: left;
 	width: 100%;
@@ -1422,6 +1440,9 @@ table.table-responsive button {
 	overflow-x: hidden;
 	z-index: 9999;
 }
+
+.ui-autocomplete-loading {background: white url("../images/search-loading.gif") 99% center no-repeat;}
+
 .ui-autocomplete .ui-menu-item {
 	padding: 8px;
 	font-size: 13px;
@@ -1447,8 +1468,9 @@ table.table-responsive button {
 }
 .ui-datepicker-header .ui-datepicker-title {
 	color: #A7284D;
-	font-family: 'SegoeUI-SemiBold';
+	font-family: 'SegoeUI';
 	font-size: 15px;
+	font-weight:bold;
 }
 .datepicker table tr td span {
 	border-radius: 5px;
@@ -1462,6 +1484,14 @@ table.table-responsive button {
 @media only screen and (min-device-height : 200px) and (max-device-height : 600px) and (orientation : portrait) {
 #normalModal .modal-body {
 	max-height: 135px;
+}
+.login-box {
+	margin-top: 0px;
+	top: 0;
+	position: relative;
+}
+.login {
+	margin-bottom : 10px; 
 }
 }
 /* ///////// On/Off FlipSwitch //////////////// */
@@ -1650,7 +1680,63 @@ table.table-responsive button {
   background: #fff;
 }
 
+/* unfixed */
+.unfixed{position: absolute !important; width:100%;}
 
- @import url("apple.css");
+
+/*}
 }
+commented found it extra - jatinder*/
+
+/****
+	**** Filter.css file merged here ****
+*****/
+.site-main.row {
+    margin: 0
 }
+
+.inner {
+    min-height: 100%;
+}
+
+/* needed to override jQuery */
+
+@media (max-width:767px) {
+    .primary-col,
+    .secondary-col {
+        height: 100%;
+    }
+    .site-main {
+        padding-bottom: 0px;
+    }
+}
+
+
+/* larger viewport layout */
+
+@media (min-width:768px) {
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    #page {
+        height: 100%;
+        height: auto;
+        min-height: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .site-main {
+        height: 100%;
+    }
+}
+
+/****
+	**** Filter.css file merged END here ****
+*****/
+
+/*@import url("apple.css"); Including this file in index.html file after custom.min.css file 
+
+Now it is working fine testing the  comilation of css file and its output!
+*/

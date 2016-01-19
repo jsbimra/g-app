@@ -109,16 +109,18 @@
 			        <div class="modal-body edit-message">
 			          <div id="dynamicTemplate" ng-hide="peopleDetailCtrl.editFormSubmittedMsg">
 			            <div class="media-body media-detail">
-			            	<label class="heading">Managing Position</label>
+			            	<label class="heading">Management Position</label>
 				            <input type="text" name="managingField1" class="form-control" ng-model="peopleDetailCtrl.managingField1" />
 				            <br />
 				            <input type="text" name="managingField2" class="form-control" ng-model="peopleDetailCtrl.managingField2" />
 			          	</div>	                
 			          </div>
-			          <div class="text-center" ng-show="peopleDetailCtrl.editFormSubmittedMsg"><br />Your details have been saved successfully!<br /><br /></div>
+                      <div class="text-center" ng-show="peopleDetailCtrl.editFormSubmitWaitingMsg"><br />Please wait <img class="media-object img-circle" width="15" height="15" src="system/img/pre-loader.GIF" style="display: inline;"><br /><br /></div>
+			          
+                      <div class="text-center" ng-show="peopleDetailCtrl.editFormSubmittedMsg"><br />Your details have been saved successfully!<br /><br /></div>
 				    </div>
 			        <div class="modal-footer">
-			         	<button type="submit" class="btn btn-primary" ng-hide="peopleDetailCtrl.editFormSubmittedMsg">Save</button>
+			         	<button type="submit" class="btn btn-primary" ng-hide="peopleDetailCtrl.editFormSubmittedMsg || peopleDetailCtrl.editFormSubmitWaitingMsg" >Save</button>
 			          	<button type="button" class="btn btn-default" ng-hide="peopleDetailCtrl.editFormSubmittedMsg" data-dismiss="modal">Close</button>
 			          	<button type="button" class="btn btn-primary" ng-show="peopleDetailCtrl.editFormSubmittedMsg" data-dismiss="modal">OK</button>
 			        </div>

@@ -2,7 +2,10 @@
 	'use strict';
 
 	angular.module('xCCeedGlobalApp')
-		.factory('filterAPIService',function($http,$location,$timeout,commonAPIService,constantAPIService){
+		.factory('filterAPIService', filterAPIService);
+
+		/* @ngInject */
+		function filterAPIService($http,$location,$timeout,commonAPIService,constantAPIService){
 			var filterAPI = {};
 
 			filterAPI.getAppliedFiltersObj = function(){
@@ -193,6 +196,6 @@
 			}
 
 			return filterAPI;
-		});//end of filterAPIService
+		};//end of filterAPIService
 
 })();

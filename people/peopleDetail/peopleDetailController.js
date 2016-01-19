@@ -4,7 +4,7 @@
 	angular.module('xCCeedGlobalApp')
 		.controller('peopleDetailController',['$scope','$filter','constantAPIService','commonAPIService','peopleSharedAPIService',peopleDetailController]);
 		
-		
+		/* @ngInject */
 		function peopleDetailController($scope,$filter,constantAPIService,commonAPIService,peopleSharedAPIService){
 			
 			//variable decelaration
@@ -13,6 +13,7 @@
 			vm.peopleDetailHeader = true;
 			vm.singlePeopleData = undefined;
 			vm.editFormSubmittedMsg = false;
+			vm.editFormSubmitWaitingMsg = false;
 			vm.LoggedInRole = peopleSharedAPIService.RoleFromLS;
 			vm.showEditModal = showEditModal;
 			vm.saveEditForm = saveEditForm;
@@ -70,46 +71,65 @@
 
 			/* Save edit form */
 			function saveEditForm(){
+				
 				var updateManagingPositionURL = constantAPIService.BASE_SERVICE_URL + constantAPIService.routingDetails().EDIT_MANAGING_POSITION;
 				if($scope.frmEditModal.$valid === false){return;}else{
 					//console.log('you can submit the form');
 
+					//ON Loading flag
+					$scope.$parent.loadingFlag = true;
+					
+									
 					var managingPosition = peopleSharedAPIService.FormatData(vm.managingField1,vm.managingField2);
 
 					var dataToServer = peopleSharedAPIService.DataToServerManagingPositon(managingPosition,vm.userId);
 					
-					peopleSharedAPIService.UpdateManagingPositon(updateManagingPositionURL,"PUT",dataToServer,$scope).then(function(resp){
+					
+					//this is to check the internet connection
+					if (commonAPIService.checkNetworkConnection() === 'ONL'){
 						
-						//This flag is to display the message for the successfully edited
-						vm.editFormSubmittedMsg = true;
+						vm.editFormSubmitWaitingMsg = true;
 
-						//This will update the UI
-						vm.singlePeopleData.Consultant_Additional_Detail[0].Management_Position =managingPosition.replace("||",", ");
-						
-						////now update the ls for the refresh part
+						peopleSharedAPIService.UpdateManagingPositon(updateManagingPositionURL,"PUT",dataToServer,$scope,vm).then(function(resp){
+							
+							//This flag is to display the message for the successfully edited
+							$scope.$parent.loadingFlag = false;
+							vm.editFormSubmitWaitingMsg = false;
+							vm.editFormSubmittedMsg = true;
+							
+							//This will update the UI
+							vm.singlePeopleData.Consultant_Additional_Detail[0].Management_Position =managingPosition.replace("||",", ");
+							
+							////now update the ls for the refresh part
 							//getting the value from local storage
-						var peopleInfoLS = peopleSharedAPIService.getFromLS(constantAPIService.PERSON_INFO);
-						if(peopleInfoLS != "undefined" && peopleInfoLS != null && peopleInfoLS != "")
-						{	
-								//convert the ls data to object form
-								var temp = JSON.parse(peopleInfoLS)
-								//console.log(temp);
-								if(temp != null || temp != undefined){
-									var consultantAdditonalDetail = temp.Consultant_Additional_Detail;
-									if(consultantAdditonalDetail.length > 0){
-											
-											//Setting the value of Managing Position
-											temp.Consultant_Additional_Detail[0].Management_Position  = commonAPIService.replaceAllOccurance(managingPosition,'||',', ');
-											
-											//var tempStringify = JSON.stringify(temp);
-											peopleSharedAPIService.setToLS(constantAPIService.PERSON_INFO,temp);
+							var peopleInfoLS = peopleSharedAPIService.getFromLS(constantAPIService.PERSON_INFO);
+							if(peopleInfoLS != "undefined" && peopleInfoLS != null && peopleInfoLS != "")
+							{	
+									//convert the ls data to object form
+									var temp = JSON.parse(peopleInfoLS)
+									//console.log(temp);
+									if(temp != null || temp != undefined){
+										var consultantAdditonalDetail = temp.Consultant_Additional_Detail;
+										if(consultantAdditonalDetail.length > 0){
+												
+												//Setting the value of Managing Position
+												temp.Consultant_Additional_Detail[0].Management_Position  = commonAPIService.replaceAllOccurance(managingPosition,'||',', ');
+												
+												//var tempStringify = JSON.stringify(temp);
+												peopleSharedAPIService.setToLS(constantAPIService.PERSON_INFO,temp);
 
-									}//consultantAdditionDetail		
-								}//if peopleInfoLS
+										}//consultantAdditionDetail		
+									}//if peopleInfoLS
 
-						}//end of people info 
-						
-					});///end updateManagingpostion
+							}//end of people info 
+							
+						});///end updateManagingpostion
+					}
+					else{
+						$('#'+$scope.editInfo.editHTMLId).modal('hide');
+						$scope.$parent.loadingFlag	= false;
+						commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+					}
 
 				}//scope editfrom Modal 
 			}//end of function (Save edit )

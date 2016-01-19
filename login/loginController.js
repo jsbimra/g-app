@@ -5,9 +5,12 @@
 
 	loginController.$inject = ['masterDataList'];
 
+	/* @ngInject */
 	function loginController($scope,$http,$location,loginAPIService,constantAPIService,commonAPIService,masterDataList){
 
 		var vm = this;
+
+		alert('login hello');
 
 		vm.submitted = false;
 
@@ -55,15 +58,24 @@
 			//object for the conversion to pass the value to the server.
 			var dataToServer = loginAPIService.DataToServer(vm_userID,$('#hidEncrypted').val(),vm_DeviceID);
 
-			//this is to check whether the data is for the application or the registration form
-			if (constantAPIService.IS_REGISTRATION === true){
-				//login service call (Not all the operation and setting is done in loginService)
-				loginAPIService.GetResultForRegistration(baseURLRegistration,"POST",dataToServer,$scope);
+			//this is to check the internet connection
+			if (commonAPIService.checkNetworkConnection() === 'ONL'){	
+				// //this is to check whether the data is for the application or the registration form
+				// if (constantAPIService.IS_REGISTRATION === true){
+				// 	//login service call (Not all the operation and setting is done in loginService)
+				// 	loginAPIService.GetResultForRegistration(baseURLRegistration,"POST",dataToServer,$scope);
+				// }
+				// else
+				// {
+				// 	//login service call (Not all the operation and setting is done in loginService)
+					
+					///Note: Registration page is seperated to resolved the ie 9 issue so no need of registration 
+					loginAPIService.GetResult(baseURL,"POST",dataToServer,$scope);
+				// }
 			}
-			else
-			{
-				//login service call (Not all the operation and setting is done in loginService)
-				loginAPIService.GetResult(baseURL,"POST",dataToServer,$scope);
+			else{
+				$scope.$parent.loadingFlag	= false;
+				commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
 			}
 			
 		}//end of login function

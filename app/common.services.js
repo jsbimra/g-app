@@ -3,7 +3,7 @@
 	
 
 	angular.module('xCCeedGlobalApp')
-		.factory('commonAPIService', function($http, $location,constantAPIService){
+		.factory('commonAPIService', function($http, $location,$rootScope,constantAPIService){
 		
 		//variable declaration
 		var commonService={};
@@ -176,6 +176,11 @@
 	             if(actionType == 'redirect'){   
 	             	alertUrl !== undefined ? commonService.redirectTo(alertUrl) : '';             
 	            }
+
+	            if(actionType == 'redirectLogin'){
+	            	commonService.registrationLogout();
+	            	alertUrl !== undefined ? commonService.redirectTo(alertUrl) : '';
+	            }
 	    	}
 
 	    	/* Invoke the alert modal and stop outside boundary issue*/
@@ -219,12 +224,10 @@
 
 		//logout functionality
 		commonService.registrationLogout = function(){
-			//commonAPIService.clearSpecificLS();
-			var pathLocation = commonService.getFromLS(constantAPIService.DEFAULT_PATH);
+			commonService.clearSpecificLS();
 			commonService.clearSS();
-			commonService.clearLS();
-			console.log(pathLocation);
-			window.location = pathLocation;
+			$rootScope.successLogin = undefined;
+			$location.path('/');
 			
 		}//getResult ended
 
@@ -253,6 +256,12 @@
        			//console.log('Please pass element id');
        		}
         }//end remaining char count
+
+        //This is to check the connection is active or not
+        commonService.checkNetworkConnection = function(){
+        	var state = navigator.onLine ? constantAPIService.ONLINE : constantAPIService.OFFLINE;
+        	return state;
+        }
 
 		// commonService.addSpaceAfterReplace = function(str,find,replace){
 		// 	//return str.split(find).joinreplace);

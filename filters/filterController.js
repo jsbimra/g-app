@@ -11,6 +11,7 @@
     angular.module('xCCeedGlobalApp')
         .controller('filterController', ['$scope', '$filter', '$location', '$timeout', 'constantAPIService', 'commonAPIService','filterAPIService','peopleSharedAPIService', filterController]);
 
+    /* @ngInject */
     function filterController($scope, $filter, $location, $timeout, constantAPIService, commonAPIService,filterAPIService,peopleSharedAPIService) {
 
     	/* Define in custom.js to equal the height of sidebar with right panel */
@@ -400,14 +401,20 @@
 
         //This function is to call the apply filter
         function applyFilters(){ 
-            /* No items in tempAppliedArr empty the appliedFilter localStroage values */
-            if(tempAppliedArr.length === 0){
-                localStorage.setItem(constantAPIService.APPLIED_FILTERS_OBJ, tempAppliedArr);
+            //this is to check the internet connection
+            if (commonAPIService.checkNetworkConnection() === 'ONL'){
+                /* No items in tempAppliedArr empty the appliedFilter localStroage values */
+                if(tempAppliedArr.length === 0){
+                    localStorage.setItem(constantAPIService.APPLIED_FILTERS_OBJ, tempAppliedArr);
+                }
+                
+                //This page will redirect to people page
+                filterAPIService.redirectToDetail();
             }
-            
-            //This page will redirect to people page
-            filterAPIService.redirectToDetail();
-           
+            else{
+                $scope.$parent.loadingFlag  = false;
+                commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+            }
         }
 
         function emptyAppliedFilterObj(){

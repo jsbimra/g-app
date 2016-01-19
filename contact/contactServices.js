@@ -1,42 +1,46 @@
 (function() {
-	 'use strict';
+    'use strict';
 
-angular.module('xCCeedGlobalApp')
-	.factory('contactAPIService',function($http,$location,$timeout,constantAPIService,commonAPIService){
-		var contactAPI = {};
+    angular.module('xCCeedGlobalApp')
+        .factory('contactAPIService', contactAPIService);
 
-		contactAPI.DataToServer = function(msg,uid){
-			 var datatoServer = {
-				User_Id: uid,
-				message: msg
-			}
+    /* @ngInject */
+    function contactAPIService($http, $location, $timeout, constantAPIService, commonAPIService) {
+        var contactAPI = {};
 
-			return datatoServer;
+        contactAPI.DataToServer = function(msg, uid) {
+                var datatoServer = {
+                    User_Id: uid,
+                    message: msg
+                }
 
-		}//datatoserver
+                return datatoServer;
 
-		//adding the contact in the data base
-		contactAPI.SetContact = function(baseUrl,verb,dataToServer,scope){
-			var obj = commonAPIService.allVerbasFunction(baseUrl,"POST",dataToServer);
-			obj.getPostData().success(function(data,status, header, config){
-				if(data != null){
-					
-				//after success full entry in the data base
-                commonAPIService.triggerModel("success-alert","redirect","Success",constantAPIService.INSERTION_SUCCESS,"OK","","#people",scope.alertInfo);
+            } //datatoserver
 
-				}
-				//console.log(data);
-			}).error(function(data,status, header, config){
+        //adding the contact in the data base
+        contactAPI.SetContact = function(baseUrl, verb, dataToServer, scope) {
+                var obj = commonAPIService.allVerbasFunction(baseUrl, "POST", dataToServer);
+                obj.getPostData().success(function(data, status, header, config) {
+                    if (data != null) {
 
-				//Off of loading flag
-				scope.$parent.loadingFlag = false;
+                        //after success full entry in the data base
+                        commonAPIService.triggerModel("success-alert", "redirect", "Message Saved", constantAPIService.INSERTION_SUCCESS, "OK", "", "#people", scope.alertInfo);
 
-				//this is to show the service error
-				commonAPIService.triggerModel("error-alert","alert","Error",constantAPIService.SERVICE_ERROR,"OK","","",scope.alertInfo);
-			
-			});//end of the service call
-		
-		}//getResult ended
-		return contactAPI;
-	});//end of Contact
+                    }
+                    //console.log(data);
+                }).error(function(data, status, header, config) {
+
+                    //Off of loading flag
+                    scope.$parent.loadingFlag = false;
+
+                    //this is to show the service error
+                    commonAPIService.triggerModel("error-alert", "alert", "Error", constantAPIService.SERVICE_ERROR, "OK", "", "", scope.alertInfo);
+
+                }); //end of the service call
+
+            } //getResult ended
+        return contactAPI;
+    }; //end of Contact
+
 })();

@@ -12,14 +12,14 @@
                 <div class="jsInfiniteScrollPanel custom-scroll-panel" ng-hide="peopleCtrl.detailViewUI" infinite-scroll="peopleCtrl.loadAllPeopleList()" infinite-scroll-disabled="customInfiScroll.busy" infinite-scroll-distance="1" infinite-scroll-immediate-check="true">
                     <ul ng-hide="peopleCtrl.peopleList.length==0">
                         <!--  {{peopleCtrl.peopleList}} filter: searchFilter | -->
-                        <!-- Single Profile List -->
-                        <li class="list-repeater animate-repeat22" auto-list-divider auto-list-divider-value="{{listItems.First_Name}}" ng-repeat="listItems in peopleCtrl.peopleList | orderBy: 'First_Name'" ng-if="peopleCtrl.peopleList.length !==0" ng-class="{even: $even, odd: $odd}">
+                         <!-- Single Profile List / animation commented for pull data and new attribute added-->
+                        <li class="list-repeater animate-repeat2" auto-list-divider auto-list-divider-value="{{listItems.First_Name}}" ng-repeat="listItems in peopleCtrl.peopleList | orderBy: 'First_Name'" ng-if="peopleCtrl.peopleList.length !==0" ng-class="{even: $even, odd: $odd}">
                             <!-- {{listItems}} -->
                             <!-- {{listItems.User_Id}}  -->
                             <a href="javascript:void(0);" ng-click="showPeopleDetailView(listItems.User_Id)">
                                 <div class="media">
                                     <div class="col-md-12">
-                                        <div class="media-left"><img class="media-object img-circle" width="50px" height="50px" ng-src="{{listItems.Profile_URL}}"></div>
+                                        <div class="media-left"><img class="media-object img-circle" width="50" height="50" ng-src="{{listItems.Profile_URL}}" src="system/img/pre-loader.GIF"></div>
                                         <div class="media-body">
                                             <h4 class="media-heading">
                         <span ng-bind="listItems.First_Name"></span>  <span ng-bind="listItems.Last_Name"></span>
@@ -34,15 +34,20 @@
                         <!-- // Single Profile List -->
                     </ul>
 
-                    <div ng-show="peopleCtrl.peopleList.length==0" ng-class="{'hide': !peopleCtrl.showNoRecordsUI}" class="text-center well hide">No records available for applied filter. Please try with another <a href="#filterPeople">filters</a>.</div>
+                    <!-- if there is no data available the search using named filter and display error messgae -->
+                    <div ng-show="peopleCtrl.peopleList.length==0 && !peopleCtrl.nameFilter && !peopleCtrl.checkInternetConnection" ng-class="{'hide': !peopleCtrl.showNoRecordsUI}" class="text-center well hide">No records available for applied filter. Please try with another <a href="#filterPeople">filters</a>.</div>
+                    <div ng-show="peopleCtrl.peopleList.length==0 && peopleCtrl.nameFilter && !peopleCtrl.checkInternetConnection" ng-class="{'hide': !peopleCtrl.showNoRecordsUI}" class="text-center well hide">No records available. Please try with another search</a>.</div>
 
-                    <div ng-show="customInfiScroll.busy" ng-class="{show: customInfiScroll.busy}" class="hide data-loading-text">Loading...</div>
+                    <div ng-show="customInfiScroll.busy" ng-class="{show: customInfiScroll.busy}" class="hide data-loading-text">Loading ...</div>
+                    <!-- {{peopleCtrl.checkInternetConnection}} -->
+                    <!-- <div ng-show="peopleCtrl.checkInternetConnection" id="noConnectionMsg" ng-class="{'show' : peopleCtrl.checkInternetConnection}" class="alert alert-warning alert-dismissible noConnectionMsg"  role="alert"><strong><i class="fa fa-signal"></i></strong> No Internet connection.<a>refresh</a></div> -->
+                    <div ng-show="peopleCtrl.checkInternetConnection" ng-class="{'show' : peopleCtrl.checkInternetConnection}" class="text-center well hide"><button ng-click="peopleCtrl.loadAllPeopleList()" class="btn btn-default">Refresh</button></div></div>
                 </div>
             </div>
         </div>
         <!-- call the details view of the people-->
         <!-- <div ng-include="'/peopleDetail/peopleDetail.html'" id="peopleDetailView" ng-if="peopleCtrl.detailViewUI"></div> -->
-        <footer class="footer peopleFilterFooter hide" ng-class="{'show': peopleCtrl.showFilterFooterUI}">
+        <footer ng-show="!peopleCtrl.checkInternetConnection" class="footer peopleFilterFooter hide" ng-class="{'show': peopleCtrl.showFilterFooterUI}">
             <div class="navbar navbar-default navbar-fixed-bottom">
                 <ul class="nav nav-pills nav-justified">
                     <li class="active"> <a href="#filterPeople"><i class="fa fa-filter"></i><span class="filter-footer">Filter this list</span> </a> </li>

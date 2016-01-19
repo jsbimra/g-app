@@ -1,7 +1,8 @@
 (function(){
 	angular.module('xCCeedGlobalApp')
 		.controller('parentController',['$scope','constantAPIService','commonAPIService', parentController]);
-		
+	
+	/* @ngInject */
 	function parentController($scope,constantAPIService,commonAPIService){
 		
 		var vm = this;

@@ -1,7 +1,8 @@
 (function(){
 	angular.module('xCCeedGlobalApp')
 		.controller('parentController',['$http', '$rootScope', '$location', '$scope', '$route', 'constantAPIService','commonAPIService','parentAPIService', parentController]);
-		
+	
+	/* @ngInject */
 	function parentController($http, $rootScope, $location, $scope, $route, constantAPIService,commonAPIService,parentAPIService){
 		
 		var vm = this;

@@ -11,7 +11,7 @@ function online(event) {
     if('onLine' in navigator){
         if(!navigator.onLine){
             //<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            $('body').append('<div id="noConnectionMsg" class="alert alert-warning alert-dismissible noConnectionMsg" role="alert"><strong><i class="fa fa-signal"></i></strong> No Internet connectivity.</div>');
+            $('body').append('<div id="noConnectionMsg" class="alert alert-warning alert-dismissible noConnectionMsg" role="alert"><strong><i class="fa fa-signal"></i></strong> Please check your internet connection.</div>');
         }
         else{
             $('#noConnectionMsg').remove();
@@ -30,10 +30,10 @@ $(document).ready(function() {
 
     $(document).on('click', "#searchBtn", function(){
         $("#searchBox").slideToggle("fast", function(){
-			$(".content").toggleClass("top-space");
-			$(this).find('input').focus();
+            $(".content").toggleClass("top-space");
+            //$(this).find('input').focus(); //not required by default focus as handling keypad issue for ios device
 
-		});		
+        });     
         
         if($(this).find('i').hasClass('fa-search')){
             $(this).find('i').removeClass('fa-search');
@@ -50,7 +50,6 @@ $(document).ready(function() {
             $('#autoCompleteSearch').trigger('change');
 
             var minLength = $( "#autoCompleteSearch" ).val().length;
-            console.log(minLength);
 
             if(minLength === 0){
                   angular.bind(this, function(nameFilter){
@@ -59,28 +58,28 @@ $(document).ready(function() {
             }
         }
     });
-	
-	
-	$('.jsChartGridToggle').on('click', function(){
-		
-		var me = $(this), faElement = me.find('.fa'), graphEle = $('#graphContainer'), metricsTableEle = $('#metricsTableContainer');
-		
-		if(faElement.hasClass('fa-table')){			
-			me.find('.fa').removeClass('fa-table').addClass('fa-bar-chart');
-			
-			//Hide Graph Container show Metrics Table Container
-			graphEle.addClass('hide');
-			metricsTableEle.removeClass('hide');
-		}else{
-			me.find('.fa').removeClass('fa-bar-chart').addClass('fa-table');
-			
-			metricsTableEle.addClass('hide');
-			graphEle.removeClass('hide');		
-		}
-	});
+    
+    
+    $('.jsChartGridToggle').on('click', function(){
+        
+        var me = $(this), faElement = me.find('.fa'), graphEle = $('#graphContainer'), metricsTableEle = $('#metricsTableContainer');
+        
+        if(faElement.hasClass('fa-table')){         
+            me.find('.fa').removeClass('fa-table').addClass('fa-bar-chart');
+            
+            //Hide Graph Container show Metrics Table Container
+            graphEle.addClass('hide');
+            metricsTableEle.removeClass('hide');
+        }else{
+            me.find('.fa').removeClass('fa-bar-chart').addClass('fa-table');
+            
+            metricsTableEle.addClass('hide');
+            graphEle.removeClass('hide');       
+        }
+    });
 
 
-	//Whenever modal is shown callback of show to align model in center of screen
+    //Whenever modal is shown callback of show to align model in center of screen
 
     $(document).on('show.bs.modal', '.modal', centerModal);
     $(window).on("resize", function () {
@@ -118,33 +117,33 @@ function toggler(divClass) {
 /* If modal is visible and user press space bar or enter key dismiss the modal */
 /*$(window).keypress(function(e){
     if((e.which == 13 && $('.modal.in').is(':visible')) || (e.keyCode == 32 && $('.modal.in').is(':visible'))){
-    	
-    	//$('.modal.in').modal('hide');
-    	$('.modal.in').find('button').trigger('click');
+        
+        //$('.modal.in').modal('hide');
+        $('.modal.in').find('button').trigger('click');
     }
 });*/
 
 //Formate Date function for date to post to server
 function formatDateToServer(date){
-	if(date && date != 'undefined'){
-		
-		var splitDateArray, getFromDate, getFromMonth, getFromYear;
+    if(date && date != 'undefined'){
+        
+        var splitDateArray, getFromDate, getFromMonth, getFromYear;
 
-		splitDateArray = date.split('-');
+        splitDateArray = date.split('-');
 
 
-		getFromDate = splitDateArray[0];
-		getFromMonth = splitDateArray[1] - 1;
-		getFromYear = splitDateArray[2];
+        getFromDate = splitDateArray[0];
+        getFromMonth = splitDateArray[1] - 1;
+        getFromYear = splitDateArray[2];
 
-		var formattedDate = new Date(getFromYear, getFromMonth, getFromDate); //oLD WAY
+        var formattedDate = new Date(getFromYear, getFromMonth, getFromDate); //oLD WAY
 
-		//var custDate = new Date(getFromYear, getFromMonth, getFromDate);
-		//var formattedDate = new Date(custDate.getTime() - custDate.getTimezoneOffset()*60000); // timezone offset causing date saved one day off!
-		
+        //var custDate = new Date(getFromYear, getFromMonth, getFromDate);
+        //var formattedDate = new Date(custDate.getTime() - custDate.getTimezoneOffset()*60000); // timezone offset causing date saved one day off!
+        
 
-		return formattedDate;
-	}
+        return formattedDate;
+    }
 }
 function getDate_Edit(dt) {
     var startDateString = new Date(dt)  ;
@@ -192,3 +191,17 @@ $(window).on('load resize', function() {
     columnHeight();
 });
 
+/* Modernizr touch check */
+
+if(typeof Modernizr != 'undefined'){
+    if (Modernizr.touchevents) {
+        $(document).on('focusin', 'input, textarea, select', function() {       
+            $('.navbar-fixed-top, .navbar-fixed-bottom, #searchBox').addClass('unfixed');
+            $('footer').css({position: 'relative'});        
+        })
+        .on('focusout', 'input, textarea, select', function () {    
+            $('.navbar-fixed-top, .navbar-fixed-bottom, #searchBox').removeClass('unfixed');
+            $('footer').css({position: 'absolute'});        
+        });
+    }   
+}

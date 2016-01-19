@@ -4,7 +4,7 @@
 angular.module('xCCeedGlobalApp')
 	.controller('contactController',['$scope','$timeout','constantAPIService','commonAPIService','contactAPIService',contactController]);
 		
-		//
+		/* @ngInject */
 		function contactController($scope,$timeout,constantAPIService,commonAPIService,contactAPIService){
 			
 			//variable decelearation
@@ -57,8 +57,15 @@ angular.module('xCCeedGlobalApp')
 				//contactAPIService.validateContact(contactAdminMsg,$scope);
 				var dataToServer = contactAPIService.DataToServer(contactAdminMsg,loggedInUser);
 
-				//login service call (Not all the operation and setting is done in loginService)
-				contactAPIService.SetContact(baseURL,"POST",dataToServer,$scope);
+				//this is to check the internet connection
+				if (commonAPIService.checkNetworkConnection() === 'ONL'){
+					//login service call (Not all the operation and setting is done in loginService)
+					contactAPIService.SetContact(baseURL,"POST",dataToServer,$scope);
+				}
+				else{
+					$scope.$parent.loadingFlag	= false;
+					commonAPIService.triggerModel("error-alert","alert",constantAPIService.INTERNET_ERROR_HEADING,constantAPIService.INTERNET_ERROR,"OK","","",$scope.alertInfo);
+				}//internet connection
 				
 			}//end of add contact
 
